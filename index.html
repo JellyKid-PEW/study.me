@@ -1,2549 +1,369 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>COMNAVIFOR M-3502.1 Student Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyberspace Operations LOK Examination - COMNAVIFOR M-3502.1A</title>
 <style>
-:root{--bg:#f4f6f8;--card:#fff;--ink:#18212b;--muted:#667085;--line:#d0d5dd;--good:#067647;--bad:#b42318;--accent:#175cd3}
+:root{
+  --ink:#101A1E; --ink-2:#33454B; --ink-3:#5E7178;
+  --paper:#D9DFDA; --card:#EEF1EC; --card-2:#E4E8E2;
+  --rule:#A6B0A9; --rule-2:#C2CAC3;
+  --mark:#8C6D0C; --mark-bg:#F2E7BE;
+  --sat:#26614A; --sat-bg:#CFE0D5;
+  --unsat:#8A2B24; --unsat-bg:#EDD3CF;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
-header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);padding:12px}
-.wrap{max-width:920px;margin:auto}
-h1{font-size:1.25rem;margin:0 0 4px}
-.sub{font-size:.88rem;color:var(--muted);margin-bottom:10px}
-.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button{appearance:none;border:1px solid var(--line);background:#fff;padding:10px 12px;border-radius:9px;font-weight:700;font-size:.95rem}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-#score{font-weight:800;margin-left:auto}
-main{max-width:920px;margin:14px auto;padding:0 10px 40px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;margin:10px 0}
-.qtitle{font-weight:750;line-height:1.42;margin-bottom:10px}
-.note{font-size:.88rem;color:var(--muted);margin-bottom:6px}
-.option{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid transparent;border-radius:9px;margin:5px 0;cursor:pointer}
-.option:hover{background:#f2f4f7}
-.option input{margin-top:3px;transform:scale(1.15)}
-.option.correct{background:#ecfdf3;border-color:#6ce9a6}
-.option.wrong{background:#fef3f2;border-color:#fda29b}
-.feedback{display:none;margin-top:9px;font-weight:800}
-.feedback.good{display:block;color:var(--good)}
-.feedback.bad{display:block;color:var(--bad)}
-#startup{max-width:920px;margin:12px auto 0;padding:0 10px}
-.notice{background:#fffaeb;border:1px solid #fedf89;border-radius:10px;padding:11px;font-size:.92rem}
-@media(max-width:600px){#score{width:100%;margin-left:0}button{flex:1}}
-@media print{header,.notice{display:none}body{background:#fff}.card{break-inside:avoid}}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+.masthead{border-bottom:2px solid var(--ink);padding:26px 0 14px;margin-bottom:22px}
+.desig{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+h1{font-size:clamp(26px,4.6vw,44px);line-height:1.02;margin:0 0 12px;font-weight:800;letter-spacing:-.022em;text-transform:uppercase}
+h1 span{display:block;font-size:.52em;font-weight:600;letter-spacing:.06em;color:var(--ink-2);margin-top:8px}
+.facts{display:flex;flex-wrap:wrap;border-top:1px solid var(--rule);margin-top:16px}
+.fact{flex:1 1 150px;padding:10px 14px 10px 0;border-right:1px solid var(--rule-2);font-family:var(--mono);font-size:11.5px;line-height:1.5}
+.fact:last-child{border-right:0}
+.fact b{display:block;color:var(--ink-3);font-weight:400;letter-spacing:.13em;text-transform:uppercase;font-size:10px;margin-bottom:3px}
+
+.grid{display:grid;grid-template-columns:146px 1fr;gap:30px;align-items:start}
+
+.rail{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;padding-right:6px}
+.rail-hd{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--rule);padding-bottom:6px;margin-bottom:8px;position:sticky;top:0;background:var(--paper);z-index:2}
+.rgrp{margin-bottom:10px}
+.rgrp-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cells{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.cell{aspect-ratio:1;border:1px solid var(--rule);background:transparent;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .12s,color .12s,border-color .12s}
+.cell:hover{border-color:var(--ink)}
+.cell.answered{background:var(--mark-bg);border-color:var(--mark);color:var(--mark)}
+.cell.current{outline:2px solid var(--ink);outline-offset:1px;color:var(--ink);font-weight:700}
+.cell.sat{background:var(--sat-bg);border-color:var(--sat);color:var(--sat);font-weight:700}
+.cell.unsat{background:var(--unsat-bg);border-color:var(--unsat);color:var(--unsat);font-weight:700}
+.rail-ct{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:6px;letter-spacing:.04em;border-top:1px solid var(--rule);padding-top:7px}
+
+.card{background:var(--card);border:1px solid var(--rule);padding:26px 28px 22px}
+.eyebrow{display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--rule-2);padding-bottom:10px;margin-bottom:18px}
+.qnum{color:var(--ink);font-weight:700;letter-spacing:.08em}
+.stem{font-size:clamp(17px,2.1vw,20px);line-height:1.45;margin:0 0 20px;font-weight:600;letter-spacing:-.008em}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:var(--card-2);border:1px solid var(--rule-2);padding:12px 14px;font:inherit;font-size:15.5px;line-height:1.45;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--ink-2);background:#E9EDE7}
+.opt.sel{border-color:var(--ink);background:var(--mark-bg);border-width:1.5px;padding:11.5px 13.5px}
+.opt .ltr{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.05em;flex:0 0 auto;padding-top:2px;color:var(--ink-3)}
+.opt.sel .ltr{color:var(--mark)}
+
+.nav{display:flex;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}
+button.btn{font-family:var(--mono);font-size:12px;letter-spacing:.11em;text-transform:uppercase;padding:11px 20px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:background .12s,color .12s}
+button.btn:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+button.btn:disabled{opacity:.3;cursor:default}
+button.btn.solid{background:var(--ink);color:var(--paper)}
+button.btn.solid:hover{background:var(--ink-2);border-color:var(--ink-2)}
+.spacer{flex:1}
+.warn{font-family:var(--mono);font-size:11px;color:var(--unsat);letter-spacing:.04em;margin-top:12px}
+
+/* start screen */
+.start{background:var(--card);border:1px solid var(--rule);padding:28px}
+.start h2{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 6px;color:var(--ink-3);font-weight:400}
+.start .lede{font-size:16px;line-height:1.55;color:var(--ink-2);margin:0 0 22px;max-width:62ch}
+.modes{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule)}
+.mode{display:flex;gap:16px;align-items:baseline;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule-2);padding:14px 4px;font:inherit;cursor:pointer;color:var(--ink);transition:background .12s,padding .12s}
+.mode:hover{background:var(--card-2);padding-left:10px}
+.mode .rn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--mark);flex:0 0 34px}
+.mode .nm{flex:1;font-weight:600;font-size:15.5px}
+.mode .ct{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;flex:0 0 auto}
+.mode.full{border-top:0;background:var(--ink);color:var(--paper);padding:18px;margin-bottom:14px;border-bottom:0}
+.mode.full:hover{background:var(--ink-2);padding-left:18px}
+.mode.full .rn,.mode.full .ct{color:var(--mark-bg)}
+
+/* results */
+.score-banner{border:2px solid var(--ink);margin-bottom:26px;background:var(--card)}
+.score-top{display:flex;flex-wrap:wrap;align-items:stretch;border-bottom:1px solid var(--rule)}
+.score-big{padding:22px 26px;border-right:1px solid var(--rule);min-width:190px}
+.score-big .pct{font-size:clamp(44px,8vw,68px);font-weight:800;line-height:.94;letter-spacing:-.035em;font-family:var(--mono)}
+.score-big .raw{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.1em;margin-top:8px;text-transform:uppercase}
+.verdict{padding:22px 26px;display:flex;flex-direction:column;justify-content:center;flex:1 1 240px}
+.verdict .tag{font-family:var(--mono);font-size:clamp(18px,3.4vw,26px);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.verdict .sub{font-size:14px;color:var(--ink-2);margin-top:6px;line-height:1.45}
+.tag.pass{color:var(--sat)} .tag.fail{color:var(--unsat)}
+.sectbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+.sectbl td{padding:7px 12px;border-bottom:1px solid var(--rule-2)}
+.sectbl tr:last-child td{border-bottom:0}
+.sectbl .nm{color:var(--ink-2)}
+.sectbl .sc{text-align:right;white-space:nowrap;font-weight:700}
+.bar{display:block;height:5px;background:var(--rule-2);position:relative;min-width:60px}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--sat)}
+.bar i.low{background:var(--unsat)}
+
+.rev-hd{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--ink);padding-bottom:8px;margin:34px 0 0}
+.sec-hd{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mark);border-bottom:1px solid var(--mark);padding-bottom:6px;margin:28px 0 0;font-weight:700}
+.item{border-bottom:1px solid var(--rule-2);padding:20px 0}
+.item-top{display:flex;gap:12px;align-items:baseline;margin-bottom:9px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border:1px solid currentColor;flex:0 0 auto}
+.badge.sat{color:var(--sat);background:var(--sat-bg)}
+.badge.unsat{color:var(--unsat);background:var(--unsat-bg)}
+.item-no{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink)}
+.item-stem{font-weight:600;font-size:16px;line-height:1.45;margin-bottom:10px}
+.ans{font-size:15px;line-height:1.5;margin:4px 0;display:flex;gap:10px}
+.ans .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);flex:0 0 82px;padding-top:3px}
+.ans.correct .txt{color:var(--sat);font-weight:600}
+.ans.wrong .txt{color:var(--unsat);text-decoration:line-through;text-decoration-thickness:1px}
+.cite{margin-top:11px;background:var(--card);border-left:3px solid var(--mark);padding:9px 13px;font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--ink-2)}
+.cite b{color:var(--mark);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:3px}
+
+.note{border:1px solid var(--rule);background:var(--card);padding:16px 18px;margin-top:30px;font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.note h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 8px;font-weight:700}
+.note p{margin:0 0 9px} .note p:last-child{margin-bottom:0}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--ink-3)}
+
+@media (max-width:860px){
+  .grid{grid-template-columns:1fr;gap:16px}
+  .rail{position:static;order:-1;max-height:190px}
+  .cells{grid-template-columns:repeat(10,1fr)}
+  .card{padding:20px 18px 18px}
+  .ans{flex-direction:column;gap:2px}
+  .ans .lbl{flex:none}
+  .mode{flex-wrap:wrap;gap:6px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
 </style>
 </head>
 <body>
-<header>
 <div class="wrap">
-<h1>COMNAVIFOR M-3502.1 Student Quiz</h1>
-<div class="sub">150 questions • answers remain hidden until submission</div>
-<div class="controls">
-<button class="primary" id="gradeButton" type="button">Submit &amp; Grade</button>
-<button id="resetButton" type="button">Reset</button>
-<button id="retryButton" type="button">Retry Missed</button>
-<span id="score">Not graded</span>
-</div>
-</div>
+
+<header class="masthead">
+  <div class="desig">COMNAVIFOR M-3502.1A &middot; 20 SEP 2024 &middot; IFORTRAMAN</div>
+  <h1>Cyberspace Operations<span>Level of Knowledge Examination</span></h1>
+  <div class="facts">
+    <div class="fact"><b>Items</b>150 &middot; multiple choice &middot; one answer</div>
+    <div class="fact"><b>Scope</b>App F, App G, App A, Ch 1/2/3/5/6, App J</div>
+    <div class="fact"><b>Mission sets</b>OCO &middot; DCO &middot; governance</div>
+    <div class="fact"><b>Standard</b>80% individual and team average</div>
+  </div>
 </header>
 
-<div id="startup">
-<div class="notice">On iPhone or iPad, save the file to Files and choose <strong>Share → Open in Safari</strong> if the in-app preview does not run the quiz controls.</div>
+<div id="app"></div>
+
+<footer>
+  Built from COMNAVIFOR M-3502.1A (20 Sep 2024), with a small number of items drawn from the CMF CST-01 CRTT check sheet (13 Jan 2022) and labeled as such. Every item cites the appendix or chapter and paragraph it derives from - verify against your copy before using for formal evaluation.<br>
+  This page applies no classification or CUI markings. Apply your command's marking policy before distribution.
+</footer>
+
 </div>
 
-<main id="quiz">
-<section class="card" id="card-1">
-<div class="qtitle">1. What does AAR stand for?</div>
-
-<label class="option" data-q="1" data-i="0">
-<input type="radio" name="q1" value="0">
-<span><strong>A.</strong> After Acquisition Review</span>
-</label><label class="option" data-q="1" data-i="1">
-<input type="radio" name="q1" value="1">
-<span><strong>B.</strong> After Action Review</span>
-</label><label class="option" data-q="1" data-i="2">
-<input type="radio" name="q1" value="2">
-<span><strong>C.</strong> After Action Requirement</span>
-</label><label class="option" data-q="1" data-i="3">
-<input type="radio" name="q1" value="3">
-<span><strong>D.</strong> After Action Report</span>
-</label>
-<div class="feedback" id="fb-1"></div>
-</section><section class="card" id="card-2">
-<div class="qtitle">2. What does CCR stand for?</div>
-
-<label class="option" data-q="2" data-i="0">
-<input type="radio" name="q2" value="0">
-<span><strong>A.</strong> Cryptologic Coverage Requirement</span>
-</label><label class="option" data-q="2" data-i="1">
-<input type="radio" name="q2" value="1">
-<span><strong>B.</strong> Continuous Certification Review</span>
-</label><label class="option" data-q="2" data-i="2">
-<input type="radio" name="q2" value="2">
-<span><strong>C.</strong> Continuous Certification Requirements</span>
-</label><label class="option" data-q="2" data-i="3">
-<input type="radio" name="q2" value="3">
-<span><strong>D.</strong> Commander’s Critical Requirement</span>
-</label>
-<div class="feedback" id="fb-2"></div>
-</section><section class="card" id="card-3">
-<div class="qtitle">3. What does CNA stand for?</div>
-
-<label class="option" data-q="3" data-i="0">
-<input type="radio" name="q3" value="0">
-<span><strong>A.</strong> Control Node Attack</span>
-</label><label class="option" data-q="3" data-i="1">
-<input type="radio" name="q3" value="1">
-<span><strong>B.</strong> Control Network Attack</span>
-</label><label class="option" data-q="3" data-i="2">
-<input type="radio" name="q3" value="2">
-<span><strong>C.</strong> Computer Node Analysis</span>
-</label><label class="option" data-q="3" data-i="3">
-<input type="radio" name="q3" value="3">
-<span><strong>D.</strong> Computer Network Attack</span>
-</label>
-<div class="feedback" id="fb-3"></div>
-</section><section class="card" id="card-4">
-<div class="qtitle">4. What does CNE stand for?</div>
-
-<label class="option" data-q="4" data-i="0">
-<input type="radio" name="q4" value="0">
-<span><strong>A.</strong> Computer Network Exploitation</span>
-</label><label class="option" data-q="4" data-i="1">
-<input type="radio" name="q4" value="1">
-<span><strong>B.</strong> Computer Node Exploit</span>
-</label><label class="option" data-q="4" data-i="2">
-<input type="radio" name="q4" value="2">
-<span><strong>C.</strong> Command Node Environment</span>
-</label><label class="option" data-q="4" data-i="3">
-<input type="radio" name="q4" value="3">
-<span><strong>D.</strong> Control Node Exploitation</span>
-</label>
-<div class="feedback" id="fb-4"></div>
-</section><section class="card" id="card-5">
-<div class="qtitle">5. What does CWO stand for?</div>
-
-<label class="option" data-q="5" data-i="0">
-<input type="radio" name="q5" value="0">
-<span><strong>A.</strong> Chief Warrant Officer</span>
-</label><label class="option" data-q="5" data-i="1">
-<input type="radio" name="q5" value="1">
-<span><strong>B.</strong> Communications Watch Officer</span>
-</label><label class="option" data-q="5" data-i="2">
-<input type="radio" name="q5" value="2">
-<span><strong>C.</strong> Chief Watch Officer</span>
-</label><label class="option" data-q="5" data-i="3">
-<input type="radio" name="q5" value="3">
-<span><strong>D.</strong> Communications Watch Order</span>
-</label>
-<div class="feedback" id="fb-5"></div>
-</section><section class="card" id="card-6">
-<div class="qtitle">6. What does EDG stand for?</div>
-
-<label class="option" data-q="6" data-i="0">
-<input type="radio" name="q6" value="0">
-<span><strong>A.</strong> Event Drill Group</span>
-</label><label class="option" data-q="6" data-i="1">
-<input type="radio" name="q6" value="1">
-<span><strong>B.</strong> Event Drill Guide</span>
-</label><label class="option" data-q="6" data-i="2">
-<input type="radio" name="q6" value="2">
-<span><strong>C.</strong> Event Directive Guide</span>
-</label><label class="option" data-q="6" data-i="3">
-<input type="radio" name="q6" value="3">
-<span><strong>D.</strong> Event Directive Group</span>
-</label>
-<div class="feedback" id="fb-6"></div>
-</section><section class="card" id="card-7">
-<div class="qtitle">7. What does IFTRM stand for?</div>
-
-<label class="option" data-q="7" data-i="0">
-<input type="radio" name="q7" value="0">
-<span><strong>A.</strong> Intelligence Force Tactical Readiness Manual</span>
-</label><label class="option" data-q="7" data-i="1">
-<input type="radio" name="q7" value="1">
-<span><strong>B.</strong> Information Forces Tactical Readiness Manual</span>
-</label><label class="option" data-q="7" data-i="2">
-<input type="radio" name="q7" value="2">
-<span><strong>C.</strong> Intelligence Forces Training and Readiness Manual</span>
-</label><label class="option" data-q="7" data-i="3">
-<input type="radio" name="q7" value="3">
-<span><strong>D.</strong> Information Forces Training and Readiness Manual</span>
-</label>
-<div class="feedback" id="fb-7"></div>
-</section><section class="card" id="card-8">
-<div class="qtitle">8. What does NMETL stand for?</div>
-
-<label class="option" data-q="8" data-i="0">
-<input type="radio" name="q8" value="0">
-<span><strong>A.</strong> Navy Mission Essential Task List</span>
-</label><label class="option" data-q="8" data-i="1">
-<input type="radio" name="q8" value="1">
-<span><strong>B.</strong> Navy Mission Essential Training List</span>
-</label><label class="option" data-q="8" data-i="2">
-<input type="radio" name="q8" value="2">
-<span><strong>C.</strong> Navy Marine Experience Training Level</span>
-</label><label class="option" data-q="8" data-i="3">
-<input type="radio" name="q8" value="3">
-<span><strong>D.</strong> Navy Mission Essential Training Level</span>
-</label>
-<div class="feedback" id="fb-8"></div>
-</section><section class="card" id="card-9">
-<div class="qtitle">9. What does PB4T stand for?</div>
-
-<label class="option" data-q="9" data-i="0">
-<input type="radio" name="q9" value="0">
-<span><strong>A.</strong> Planning Board For Training</span>
-</label><label class="option" data-q="9" data-i="1">
-<input type="radio" name="q9" value="1">
-<span><strong>B.</strong> Planning Board Four Training</span>
-</label><label class="option" data-q="9" data-i="2">
-<input type="radio" name="q9" value="2">
-<span><strong>C.</strong> Plan to Board For Training</span>
-</label><label class="option" data-q="9" data-i="3">
-<input type="radio" name="q9" value="3">
-<span><strong>D.</strong> Professional Board for Training</span>
-</label>
-<div class="feedback" id="fb-9"></div>
-</section><section class="card" id="card-10">
-<div class="qtitle">10. What does POA&amp;M stand for?</div>
-
-<label class="option" data-q="10" data-i="0">
-<input type="radio" name="q10" value="0">
-<span><strong>A.</strong> Plan of Action and Mitigations</span>
-</label><label class="option" data-q="10" data-i="1">
-<input type="radio" name="q10" value="1">
-<span><strong>B.</strong> Plan of Action and Milestones</span>
-</label><label class="option" data-q="10" data-i="2">
-<input type="radio" name="q10" value="2">
-<span><strong>C.</strong> Plan of Action and Metrics</span>
-</label><label class="option" data-q="10" data-i="3">
-<input type="radio" name="q10" value="3">
-<span><strong>D.</strong> Plan of Action and Measures</span>
-</label>
-<div class="feedback" id="fb-10"></div>
-</section><section class="card" id="card-11">
-<div class="qtitle">11. What does RAC stand for?</div>
-
-<label class="option" data-q="11" data-i="0">
-<input type="radio" name="q11" value="0">
-<span><strong>A.</strong> Risk Assessment Condition</span>
-</label><label class="option" data-q="11" data-i="1">
-<input type="radio" name="q11" value="1">
-<span><strong>B.</strong> Risk Action Condition</span>
-</label><label class="option" data-q="11" data-i="2">
-<input type="radio" name="q11" value="2">
-<span><strong>C.</strong> Risk Assessment Code</span>
-</label><label class="option" data-q="11" data-i="3">
-<input type="radio" name="q11" value="3">
-<span><strong>D.</strong> Risk Action Code</span>
-</label>
-<div class="feedback" id="fb-11"></div>
-</section><section class="card" id="card-12">
-<div class="qtitle">12. What does ROI stand for?</div>
-
-<label class="option" data-q="12" data-i="0">
-<input type="radio" name="q12" value="0">
-<span><strong>A.</strong> Return on Investment</span>
-</label><label class="option" data-q="12" data-i="1">
-<input type="radio" name="q12" value="1">
-<span><strong>B.</strong> Return of Investment</span>
-</label><label class="option" data-q="12" data-i="2">
-<input type="radio" name="q12" value="2">
-<span><strong>C.</strong> Rate of Investment</span>
-</label><label class="option" data-q="12" data-i="3">
-<input type="radio" name="q12" value="3">
-<span><strong>D.</strong> Rate on Investment</span>
-</label>
-<div class="feedback" id="fb-12"></div>
-</section><section class="card" id="card-13">
-<div class="qtitle">13. What does UXP stand for?</div>
-
-<label class="option" data-q="13" data-i="0">
-<input type="radio" name="q13" value="0">
-<span><strong>A.</strong> Unit Exercise Publication</span>
-</label><label class="option" data-q="13" data-i="1">
-<input type="radio" name="q13" value="1">
-<span><strong>B.</strong> Universal Exercise Publication</span>
-</label><label class="option" data-q="13" data-i="2">
-<input type="radio" name="q13" value="2">
-<span><strong>C.</strong> Universal Exercise Platform</span>
-</label><label class="option" data-q="13" data-i="3">
-<input type="radio" name="q13" value="3">
-<span><strong>D.</strong> Unit Exercise Platform</span>
-</label>
-<div class="feedback" id="fb-13"></div>
-</section><section class="card" id="card-14">
-<div class="qtitle">14. What does ULTRA in ULTRA-C or ULTRA-S stand for?</div>
-
-<label class="option" data-q="14" data-i="0">
-<input type="radio" name="q14" value="0">
-<span><strong>A.</strong> Unit Level Training &amp; Readiness Action</span>
-</label><label class="option" data-q="14" data-i="1">
-<input type="radio" name="q14" value="1">
-<span><strong>B.</strong> Unit Level Training Requirements Action</span>
-</label><label class="option" data-q="14" data-i="2">
-<input type="radio" name="q14" value="2">
-<span><strong>C.</strong> Unit Level Training Requirements Assessment</span>
-</label><label class="option" data-q="14" data-i="3">
-<input type="radio" name="q14" value="3">
-<span><strong>D.</strong> Unit Level Training &amp; Readiness Assessment</span>
-</label>
-<div class="feedback" id="fb-14"></div>
-</section><section class="card" id="card-15">
-<div class="qtitle">15. What does TTP stand for?</div>
-
-<label class="option" data-q="15" data-i="0">
-<input type="radio" name="q15" value="0">
-<span><strong>A.</strong> Tactical Technique and Procedure</span>
-</label><label class="option" data-q="15" data-i="1">
-<input type="radio" name="q15" value="1">
-<span><strong>B.</strong> Techniques Tactics and Procedures</span>
-</label><label class="option" data-q="15" data-i="2">
-<input type="radio" name="q15" value="2">
-<span><strong>C.</strong> Tactics, Techniques and Procedures</span>
-</label><label class="option" data-q="15" data-i="3">
-<input type="radio" name="q15" value="3">
-<span><strong>D.</strong> Tactical Training Platform</span>
-</label>
-<div class="feedback" id="fb-15"></div>
-</section><section class="card" id="card-16">
-<div class="qtitle">16. What does TRAMAN stand for?</div>
-
-<label class="option" data-q="16" data-i="0">
-<input type="radio" name="q16" value="0">
-<span><strong>A.</strong> Training Manual</span>
-</label><label class="option" data-q="16" data-i="1">
-<input type="radio" name="q16" value="1">
-<span><strong>B.</strong> Information Forces Training Manual</span>
-</label><label class="option" data-q="16" data-i="2">
-<input type="radio" name="q16" value="2">
-<span><strong>C.</strong> Information Forces Training and Readiness Manual</span>
-</label><label class="option" data-q="16" data-i="3">
-<input type="radio" name="q16" value="3">
-<span><strong>D.</strong> Training and Readiness Manual</span>
-</label>
-<div class="feedback" id="fb-16"></div>
-</section><section class="card" id="card-17">
-<div class="qtitle">17. What does NTIMS stand for?</div>
-
-<label class="option" data-q="17" data-i="0">
-<input type="radio" name="q17" value="0">
-<span><strong>A.</strong> Navy Training Information Management System</span>
-</label><label class="option" data-q="17" data-i="1">
-<input type="radio" name="q17" value="1">
-<span><strong>B.</strong> Navy Tactical Information Management System</span>
-</label><label class="option" data-q="17" data-i="2">
-<input type="radio" name="q17" value="2">
-<span><strong>C.</strong> Navy Training Information Maintenance System</span>
-</label><label class="option" data-q="17" data-i="3">
-<input type="radio" name="q17" value="3">
-<span><strong>D.</strong> Navy Tactical Information Maintenance System</span>
-</label>
-<div class="feedback" id="fb-17"></div>
-</section><section class="card" id="card-18">
-<div class="qtitle">18. What does LRTC stand for?</div>
-
-<label class="option" data-q="18" data-i="0">
-<input type="radio" name="q18" value="0">
-<span><strong>A.</strong> Long Range Training Committee</span>
-</label><label class="option" data-q="18" data-i="1">
-<input type="radio" name="q18" value="1">
-<span><strong>B.</strong> Long Range Technical Communications</span>
-</label><label class="option" data-q="18" data-i="2">
-<input type="radio" name="q18" value="2">
-<span><strong>C.</strong> Long Range Training Calendar</span>
-</label><label class="option" data-q="18" data-i="3">
-<input type="radio" name="q18" value="3">
-<span><strong>D.</strong> Long Range Technical Committee</span>
-</label>
-<div class="feedback" id="fb-18"></div>
-</section><section class="card" id="card-19">
-<div class="qtitle">19. What does CRTT stand for?</div>
-
-<label class="option" data-q="19" data-i="0">
-<input type="radio" name="q19" value="0">
-<span><strong>A.</strong> Command Requirements Training Team</span>
-</label><label class="option" data-q="19" data-i="1">
-<input type="radio" name="q19" value="1">
-<span><strong>B.</strong> Cyber Requirements Training Team</span>
-</label><label class="option" data-q="19" data-i="2">
-<input type="radio" name="q19" value="2">
-<span><strong>C.</strong> Cyber Readiness Training Team</span>
-</label><label class="option" data-q="19" data-i="3">
-<input type="radio" name="q19" value="3">
-<span><strong>D.</strong> Command Readiness Training Team</span>
-</label>
-<div class="feedback" id="fb-19"></div>
-</section><section class="card" id="card-20">
-<div class="qtitle">20. What does C5I stand for?</div>
-
-<label class="option" data-q="20" data-i="0">
-<input type="radio" name="q20" value="0">
-<span><strong>A.</strong> Command, Control, Cyber Forces, Computers, Combat Systems and Intelligence</span>
-</label><label class="option" data-q="20" data-i="1">
-<input type="radio" name="q20" value="1">
-<span><strong>B.</strong> Command, Control, Communications, Computers, Combat Systems and Intelligence</span>
-</label><label class="option" data-q="20" data-i="2">
-<input type="radio" name="q20" value="2">
-<span><strong>C.</strong> Command, Control, Communications, Computers, Combat Systems and Information</span>
-</label><label class="option" data-q="20" data-i="3">
-<input type="radio" name="q20" value="3">
-<span><strong>D.</strong> Command, Control, Cyber Forces, Combatants, Combat Systems and Intelligence</span>
-</label>
-<div class="feedback" id="fb-20"></div>
-</section><section class="card" id="card-21">
-<div class="qtitle">21. What does CND stand for?</div>
-
-<label class="option" data-q="21" data-i="0">
-<input type="radio" name="q21" value="0">
-<span><strong>A.</strong> Computer Network Defense</span>
-</label><label class="option" data-q="21" data-i="1">
-<input type="radio" name="q21" value="1">
-<span><strong>B.</strong> Chinese National Defense</span>
-</label><label class="option" data-q="21" data-i="2">
-<input type="radio" name="q21" value="2">
-<span><strong>C.</strong> Cyber Navy Decoy</span>
-</label><label class="option" data-q="21" data-i="3">
-<input type="radio" name="q21" value="3">
-<span><strong>D.</strong> Cyber Network Defense</span>
-</label>
-<div class="feedback" id="fb-21"></div>
-</section><section class="card" id="card-22">
-<div class="qtitle">22. What does CNO stand for?</div>
-
-<label class="option" data-q="22" data-i="0">
-<input type="radio" name="q22" value="0">
-<span><strong>A.</strong> Computer Node Operations</span>
-</label><label class="option" data-q="22" data-i="1">
-<input type="radio" name="q22" value="1">
-<span><strong>B.</strong> Cyber Network Operations</span>
-</label><label class="option" data-q="22" data-i="2">
-<input type="radio" name="q22" value="2">
-<span><strong>C.</strong> Computer Network Operations</span>
-</label><label class="option" data-q="22" data-i="3">
-<input type="radio" name="q22" value="3">
-<span><strong>D.</strong> Control Node Operations</span>
-</label>
-<div class="feedback" id="fb-22"></div>
-</section><section class="card" id="card-23">
-<div class="qtitle">23. What does ESP stand for?</div>
-
-<label class="option" data-q="23" data-i="0">
-<input type="radio" name="q23" value="0">
-<span><strong>A.</strong> Exploit Strategy Platform</span>
-</label><label class="option" data-q="23" data-i="1">
-<input type="radio" name="q23" value="1">
-<span><strong>B.</strong> Exploit Scenario Proposal</span>
-</label><label class="option" data-q="23" data-i="2">
-<input type="radio" name="q23" value="2">
-<span><strong>C.</strong> Exploit Scenario Package</span>
-</label><label class="option" data-q="23" data-i="3">
-<input type="radio" name="q23" value="3">
-<span><strong>D.</strong> Exercise Scenario Package</span>
-</label>
-<div class="feedback" id="fb-23"></div>
-</section><section class="card" id="card-24">
-<div class="qtitle">24. What does JQR stand for?</div>
-
-<label class="option" data-q="24" data-i="0">
-<input type="radio" name="q24" value="0">
-<span><strong>A.</strong> Joint Qualification Requirement</span>
-</label><label class="option" data-q="24" data-i="1">
-<input type="radio" name="q24" value="1">
-<span><strong>B.</strong> Job Qualification Requirement</span>
-</label><label class="option" data-q="24" data-i="2">
-<input type="radio" name="q24" value="2">
-<span><strong>C.</strong> Job Qualification Result</span>
-</label><label class="option" data-q="24" data-i="3">
-<input type="radio" name="q24" value="3">
-<span><strong>D.</strong> Joint Qualification Result</span>
-</label>
-<div class="feedback" id="fb-24"></div>
-</section><section class="card" id="card-25">
-<div class="qtitle">25. What does JTS stand for?</div>
-
-<label class="option" data-q="25" data-i="0">
-<input type="radio" name="q25" value="0">
-<span><strong>A.</strong> Job Training System</span>
-</label><label class="option" data-q="25" data-i="1">
-<input type="radio" name="q25" value="1">
-<span><strong>B.</strong> Joint Training System</span>
-</label><label class="option" data-q="25" data-i="2">
-<input type="radio" name="q25" value="2">
-<span><strong>C.</strong> Job Training Standard</span>
-</label><label class="option" data-q="25" data-i="3">
-<input type="radio" name="q25" value="3">
-<span><strong>D.</strong> Joint Training Standard</span>
-</label>
-<div class="feedback" id="fb-25"></div>
-</section><section class="card" id="card-26">
-<div class="qtitle">26. What does ISIC stand for?</div>
-
-<label class="option" data-q="26" data-i="0">
-<input type="radio" name="q26" value="0">
-<span><strong>A.</strong> Immediate Superior in Charge</span>
-</label><label class="option" data-q="26" data-i="1">
-<input type="radio" name="q26" value="1">
-<span><strong>B.</strong> Immediate Superior in Command</span>
-</label><label class="option" data-q="26" data-i="2">
-<input type="radio" name="q26" value="2">
-<span><strong>C.</strong> Immediate Supervisor in Charge</span>
-</label><label class="option" data-q="26" data-i="3">
-<input type="radio" name="q26" value="3">
-<span><strong>D.</strong> Immediate Supervisor in Command</span>
-</label>
-<div class="feedback" id="fb-26"></div>
-</section><section class="card" id="card-27">
-<div class="qtitle">27. What does NIOC stand for?</div>
-
-<label class="option" data-q="27" data-i="0">
-<input type="radio" name="q27" value="0">
-<span><strong>A.</strong> Naval Information Operations Command</span>
-</label><label class="option" data-q="27" data-i="1">
-<input type="radio" name="q27" value="1">
-<span><strong>B.</strong> Navy Intelligence Operation Command</span>
-</label><label class="option" data-q="27" data-i="2">
-<input type="radio" name="q27" value="2">
-<span><strong>C.</strong> Navy Information Operations Command</span>
-</label><label class="option" data-q="27" data-i="3">
-<input type="radio" name="q27" value="3">
-<span><strong>D.</strong> Naval Intelligence and Operations Command</span>
-</label>
-<div class="feedback" id="fb-27"></div>
-</section><section class="card" id="card-28">
-<div class="qtitle">28. What does PESTOF stand for?</div>
-
-<label class="option" data-q="28" data-i="0">
-<input type="radio" name="q28" value="0">
-<span><strong>A.</strong> Personal, Equipment, Supply, Training, Ordnance and Facilities</span>
-</label><label class="option" data-q="28" data-i="1">
-<input type="radio" name="q28" value="1">
-<span><strong>B.</strong> Personal, Equipment, Supply, Tactics, Ordnance and Faculties</span>
-</label><label class="option" data-q="28" data-i="2">
-<input type="radio" name="q28" value="2">
-<span><strong>C.</strong> Personnel, Equipment, Supply, Tactics, Ordnance and Facilities</span>
-</label><label class="option" data-q="28" data-i="3">
-<input type="radio" name="q28" value="3">
-<span><strong>D.</strong> Personnel, Equipment, Supply, Training, Ordnance and Facilities</span>
-</label>
-<div class="feedback" id="fb-28"></div>
-</section><section class="card" id="card-29">
-<div class="qtitle">29. What does USFF stand for?</div>
-
-<label class="option" data-q="29" data-i="0">
-<input type="radio" name="q29" value="0">
-<span><strong>A.</strong> United States Fleet Forces</span>
-</label><label class="option" data-q="29" data-i="1">
-<input type="radio" name="q29" value="1">
-<span><strong>B.</strong> United States Forensic Files</span>
-</label><label class="option" data-q="29" data-i="2">
-<input type="radio" name="q29" value="2">
-<span><strong>C.</strong> United SIGINT Fleet Forces</span>
-</label><label class="option" data-q="29" data-i="3">
-<input type="radio" name="q29" value="3">
-<span><strong>D.</strong> Unified SIGINT Forensic Files</span>
-</label>
-<div class="feedback" id="fb-29"></div>
-</section><section class="card" id="card-30">
-<div class="qtitle">30. What does IO stand for?</div>
-
-<label class="option" data-q="30" data-i="0">
-<input type="radio" name="q30" value="0">
-<span><strong>A.</strong> Information Operations</span>
-</label><label class="option" data-q="30" data-i="1">
-<input type="radio" name="q30" value="1">
-<span><strong>B.</strong> Intelligence Operations</span>
-</label><label class="option" data-q="30" data-i="2">
-<input type="radio" name="q30" value="2">
-<span><strong>C.</strong> Intelligence Ordnance</span>
-</label><label class="option" data-q="30" data-i="3">
-<input type="radio" name="q30" value="3">
-<span><strong>D.</strong> Information Ordnance</span>
-</label>
-<div class="feedback" id="fb-30"></div>
-</section><section class="card" id="card-31">
-<div class="qtitle">31. What is the primary source of policy, direction, and requirements for unit-level training readiness for the Information Warfare Forces?</div>
-
-<label class="option" data-q="31" data-i="0">
-<input type="radio" name="q31" value="0">
-<span><strong>A.</strong> COMNAVIFOR Training and Readiness Manual</span>
-</label><label class="option" data-q="31" data-i="1">
-<input type="radio" name="q31" value="1">
-<span><strong>B.</strong> NAVIFOR 1532.1</span>
-</label><label class="option" data-q="31" data-i="2">
-<input type="radio" name="q31" value="2">
-<span><strong>C.</strong> NAVIFOR Training and Readiness Manual</span>
-</label><label class="option" data-q="31" data-i="3">
-<input type="radio" name="q31" value="3">
-<span><strong>D.</strong> COMNAVIFOR 1904.1A</span>
-</label>
-<div class="feedback" id="fb-31"></div>
-</section><section class="card" id="card-32">
-<div class="qtitle">32. Who is responsible for producing the required levels of readiness based upon mission requirements, investments, resources, and risks?</div>
-
-<label class="option" data-q="32" data-i="0">
-<input type="radio" name="q32" value="0">
-<span><strong>A.</strong> COMNAVIFOR</span>
-</label><label class="option" data-q="32" data-i="1">
-<input type="radio" name="q32" value="1">
-<span><strong>B.</strong> CRTT Mission Lead</span>
-</label><label class="option" data-q="32" data-i="2">
-<input type="radio" name="q32" value="2">
-<span><strong>C.</strong> Navy Training and Readiness Center</span>
-</label><label class="option" data-q="32" data-i="3">
-<input type="radio" name="q32" value="3">
-<span><strong>D.</strong> Commander Navy Warfare Center</span>
-</label>
-<div class="feedback" id="fb-32"></div>
-</section><section class="card" id="card-33">
-<div class="qtitle">33. TRUE/FALSE: NAVIFOR exercises responsibility as the Navy’s Type Commander (TYCOM) to facilitate exercises within the Information Operation commands.</div>
-
-<label class="option" data-q="33" data-i="0">
-<input type="radio" name="q33" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="33" data-i="1">
-<input type="radio" name="q33" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-33"></div>
-</section><section class="card" id="card-34">
-<div class="qtitle">34. COMNAVIFOR is the continuous certification authority for ______ subordinate Administrative Control (ADCON) shore-based activities.</div>
-
-<label class="option" data-q="34" data-i="0">
-<input type="radio" name="q34" value="0">
-<span><strong>A.</strong> all Information Forces</span>
-</label><label class="option" data-q="34" data-i="1">
-<input type="radio" name="q34" value="1">
-<span><strong>B.</strong> all Naval Forces</span>
-</label><label class="option" data-q="34" data-i="2">
-<input type="radio" name="q34" value="2">
-<span><strong>C.</strong> all DoD Forces</span>
-</label><label class="option" data-q="34" data-i="3">
-<input type="radio" name="q34" value="3">
-<span><strong>D.</strong> all international Forces</span>
-</label>
-<div class="feedback" id="fb-34"></div>
-</section><section class="card" id="card-35">
-<div class="qtitle">35. What does RTAAG stand for?</div>
-
-<label class="option" data-q="35" data-i="0">
-<input type="radio" name="q35" value="0">
-<span><strong>A.</strong> Rigorous Tasking Against Allied Groups</span>
-</label><label class="option" data-q="35" data-i="1">
-<input type="radio" name="q35" value="1">
-<span><strong>B.</strong> Readiness Towards Analytical Advancement Global</span>
-</label><label class="option" data-q="35" data-i="2">
-<input type="radio" name="q35" value="2">
-<span><strong>C.</strong> Readiness Training Assess and Assist Group</span>
-</label><label class="option" data-q="35" data-i="3">
-<input type="radio" name="q35" value="3">
-<span><strong>D.</strong> Ready to Train Analysts Awaiting Guidance</span>
-</label>
-<div class="feedback" id="fb-35"></div>
-</section><section class="card" id="card-36">
-<div class="qtitle">36. The ______ will coordinate, plan, execute, and manage the activity’s CRTT effort.</div>
-
-<label class="option" data-q="36" data-i="0">
-<input type="radio" name="q36" value="0">
-<span><strong>A.</strong> Executive Officer</span>
-</label><label class="option" data-q="36" data-i="1">
-<input type="radio" name="q36" value="1">
-<span><strong>B.</strong> Department Head</span>
-</label><label class="option" data-q="36" data-i="2">
-<input type="radio" name="q36" value="2">
-<span><strong>C.</strong> Safety Officer</span>
-</label><label class="option" data-q="36" data-i="3">
-<input type="radio" name="q36" value="3">
-<span><strong>D.</strong> Command Readiness Training Team (CRTT) Leader</span>
-</label>
-<div class="feedback" id="fb-36"></div>
-</section><section class="card" id="card-37">
-<div class="qtitle">37. What does UXP stand for?</div>
-
-<label class="option" data-q="37" data-i="0">
-<input type="radio" name="q37" value="0">
-<span><strong>A.</strong> Unified Exercise Practice</span>
-</label><label class="option" data-q="37" data-i="1">
-<input type="radio" name="q37" value="1">
-<span><strong>B.</strong> Unit Exercise Publication</span>
-</label><label class="option" data-q="37" data-i="2">
-<input type="radio" name="q37" value="2">
-<span><strong>C.</strong> Unit Exercise Purposes</span>
-</label><label class="option" data-q="37" data-i="3">
-<input type="radio" name="q37" value="3">
-<span><strong>D.</strong> Uniformed Exercise Points</span>
-</label>
-<div class="feedback" id="fb-37"></div>
-</section><section class="card" id="card-38">
-<div class="qtitle">38. TRUE/FALSE: COMNAVIFOR is responsible for ensuring the Navy balances its requirements and resources to meet mission capabilities.</div>
-
-<label class="option" data-q="38" data-i="0">
-<input type="radio" name="q38" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="38" data-i="1">
-<input type="radio" name="q38" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-38"></div>
-</section><section class="card" id="card-39">
-<div class="qtitle">39. Which of the following is NOT a responsibility of the RTAAG?</div>
-
-<label class="option" data-q="39" data-i="0">
-<input type="radio" name="q39" value="0">
-<span><strong>A.</strong> Coordinate with unit-level readiness providers to deliver and sustain unit-level proficiency</span>
-</label><label class="option" data-q="39" data-i="1">
-<input type="radio" name="q39" value="1">
-<span><strong>B.</strong> Facilitate exercises at every unit level to assess the level of capabilities</span>
-</label><label class="option" data-q="39" data-i="2">
-<input type="radio" name="q39" value="2">
-<span><strong>C.</strong> Develop and refine mission-specific certification standards, processes, and procedures</span>
-</label><label class="option" data-q="39" data-i="3">
-<input type="radio" name="q39" value="3">
-<span><strong>D.</strong> Consolidate with unit-level readiness providers to deliver</span>
-</label>
-<div class="feedback" id="fb-39"></div>
-</section><section class="card" id="card-40">
-<div class="qtitle">40. Who maintains training-pillar Requirements, Plans, and Assessment modules within the Navy Training Information Management System (NTIMS)?</div>
-
-<label class="option" data-q="40" data-i="0">
-<input type="radio" name="q40" value="0">
-<span><strong>A.</strong> CO</span>
-</label><label class="option" data-q="40" data-i="1">
-<input type="radio" name="q40" value="1">
-<span><strong>B.</strong> COMNAVIFOR</span>
-</label><label class="option" data-q="40" data-i="2">
-<input type="radio" name="q40" value="2">
-<span><strong>C.</strong> CRTT</span>
-</label><label class="option" data-q="40" data-i="3">
-<input type="radio" name="q40" value="3">
-<span><strong>D.</strong> XO</span>
-</label>
-<div class="feedback" id="fb-40"></div>
-</section><section class="card" id="card-41">
-<div class="qtitle">41. TRUE/FALSE: The CRTT Leader will be delegated below the Department Head level.</div>
-
-<label class="option" data-q="41" data-i="0">
-<input type="radio" name="q41" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="41" data-i="1">
-<input type="radio" name="q41" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-41"></div>
-</section><section class="card" id="card-42">
-<div class="qtitle">42. The ____ and ____ are responsible for the identification, formulation, integration, and conduct of all phases of exercise-audience evaluations.</div>
-
-<label class="option" data-q="42" data-i="0">
-<input type="radio" name="q42" value="0">
-<span><strong>A.</strong> CO, XO</span>
-</label><label class="option" data-q="42" data-i="1">
-<input type="radio" name="q42" value="1">
-<span><strong>B.</strong> Department Head, Lead Petty Officer</span>
-</label><label class="option" data-q="42" data-i="2">
-<input type="radio" name="q42" value="2">
-<span><strong>C.</strong> CRTT, CRT</span>
-</label><label class="option" data-q="42" data-i="3">
-<input type="radio" name="q42" value="3">
-<span><strong>D.</strong> RTAAG, COMNAVIFOR</span>
-</label>
-<div class="feedback" id="fb-42"></div>
-</section><section class="card" id="card-43">
-<div class="qtitle">43. Which of the following is NOT a duty of the CRTT Leader?</div>
-
-<label class="option" data-q="43" data-i="0">
-<input type="radio" name="q43" value="0">
-<span><strong>A.</strong> Supervise the conduct of the exercise</span>
-</label><label class="option" data-q="43" data-i="1">
-<input type="radio" name="q43" value="1">
-<span><strong>B.</strong> Serve as overall manager of the CRTT for exercise briefs, performance, and debriefs</span>
-</label><label class="option" data-q="43" data-i="2">
-<input type="radio" name="q43" value="2">
-<span><strong>C.</strong> Schedule when COMNAVIFOR will attend the unit-level exercises</span>
-</label><label class="option" data-q="43" data-i="3">
-<input type="radio" name="q43" value="3">
-<span><strong>D.</strong> Organize all CRTT periods, tailor execution plans, and make preparations in support of exercise execution</span>
-</label>
-<div class="feedback" id="fb-43"></div>
-</section><section class="card" id="card-44">
-<div class="qtitle">44. CRTT Evaluators will directly observe what?</div>
-
-<label class="option" data-q="44" data-i="0">
-<input type="radio" name="q44" value="0">
-<span><strong>A.</strong> Individual and team performance of the exercise</span>
-</label><label class="option" data-q="44" data-i="1">
-<input type="radio" name="q44" value="1">
-<span><strong>B.</strong> CRTT Leaders’ submission of the correct scores</span>
-</label><label class="option" data-q="44" data-i="2">
-<input type="radio" name="q44" value="2">
-<span><strong>C.</strong> COMNAVIFOR’s participation within the exercise</span>
-</label><label class="option" data-q="44" data-i="3">
-<input type="radio" name="q44" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-44"></div>
-</section><section class="card" id="card-45">
-<div class="qtitle">45. TRUE/FALSE: Safety observer(s) are assigned to ensure all events are conducted in accordance with COMNAVIFOR’s instructions and guidance.</div>
-
-<label class="option" data-q="45" data-i="0">
-<input type="radio" name="q45" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="45" data-i="1">
-<input type="radio" name="q45" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-45"></div>
-</section><section class="card" id="card-46">
-<div class="qtitle">46. Who must establish a self-assessment program that identifies and maintains readiness requirements throughout the annual NWTP cycle?</div>
-
-<label class="option" data-q="46" data-i="0">
-<input type="radio" name="q46" value="0">
-<span><strong>A.</strong> COs and Officers-in-Charge (OIC)</span>
-</label><label class="option" data-q="46" data-i="1">
-<input type="radio" name="q46" value="1">
-<span><strong>B.</strong> COMNAVIFOR</span>
-</label><label class="option" data-q="46" data-i="2">
-<input type="radio" name="q46" value="2">
-<span><strong>C.</strong> RTAAG</span>
-</label><label class="option" data-q="46" data-i="3">
-<input type="radio" name="q46" value="3">
-<span><strong>D.</strong> CRTT Leader</span>
-</label>
-<div class="feedback" id="fb-46"></div>
-</section><section class="card" id="card-47">
-<div class="qtitle">47. Which of the following is included in retained records and plans used for the current ULTRA certification cycle?</div>
-
-<label class="option" data-q="47" data-i="0">
-<input type="radio" name="q47" value="0">
-<span><strong>A.</strong> JQRs</span>
-</label><label class="option" data-q="47" data-i="1">
-<input type="radio" name="q47" value="1">
-<span><strong>B.</strong> Lessons Learned</span>
-</label><label class="option" data-q="47" data-i="2">
-<input type="radio" name="q47" value="2">
-<span><strong>C.</strong> Plan of the Week</span>
-</label><label class="option" data-q="47" data-i="3">
-<input type="radio" name="q47" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-47"></div>
-</section><section class="card" id="card-48">
-<div class="qtitle">48. Team members should be familiar with _____ and _____ in NTIMS to support identifying exercise deficiencies and improving training readiness.</div>
-
-<label class="option" data-q="48" data-i="0">
-<input type="radio" name="q48" value="0">
-<span><strong>A.</strong> RTAAG, COMNAVIFOR</span>
-</label><label class="option" data-q="48" data-i="1">
-<input type="radio" name="q48" value="1">
-<span><strong>B.</strong> DRRS-N, TFOM</span>
-</label><label class="option" data-q="48" data-i="2">
-<input type="radio" name="q48" value="2">
-<span><strong>C.</strong> Logging in, Logging out</span>
-</label><label class="option" data-q="48" data-i="3">
-<input type="radio" name="q48" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-48"></div>
-</section><section class="card" id="card-49">
-<div class="qtitle">49. At a minimum, the CRTT must include ______.</div>
-
-<label class="option" data-q="49" data-i="0">
-<input type="radio" name="q49" value="0">
-<span><strong>A.</strong> CRTT Team Leader, CRTT Coordinator, CRTT Evaluators, and Safety Observers</span>
-</label><label class="option" data-q="49" data-i="1">
-<input type="radio" name="q49" value="1">
-<span><strong>B.</strong> CRTT Team Leader, CRTT Evaluators, Executive Officer, and Safety Observers</span>
-</label><label class="option" data-q="49" data-i="2">
-<input type="radio" name="q49" value="2">
-<span><strong>C.</strong> CRTT Team Leader, CRTT Evaluators, CRTT Coordinator, CRTT Team Leader</span>
-</label><label class="option" data-q="49" data-i="3">
-<input type="radio" name="q49" value="3">
-<span><strong>D.</strong> Commanding Officer, Executive Officer, CRTT Coordinator, CRTT Evaluators</span>
-</label>
-<div class="feedback" id="fb-49"></div>
-</section><section class="card" id="card-50">
-<div class="qtitle">50. Who is the basic-phase certification authority for Information Force elements and detachments conducting DIRSUP afloat?</div>
-
-<label class="option" data-q="50" data-i="0">
-<input type="radio" name="q50" value="0">
-<span><strong>A.</strong> RTAAG</span>
-</label><label class="option" data-q="50" data-i="1">
-<input type="radio" name="q50" value="1">
-<span><strong>B.</strong> 5th Fleet</span>
-</label><label class="option" data-q="50" data-i="2">
-<input type="radio" name="q50" value="2">
-<span><strong>C.</strong> COMNAVIFOR</span>
-</label><label class="option" data-q="50" data-i="3">
-<input type="radio" name="q50" value="3">
-<span><strong>D.</strong> POTUS</span>
-</label>
-<div class="feedback" id="fb-50"></div>
-</section><section class="card" id="card-51">
-<div class="qtitle">51. The CRTT should be comprised of a core group of the ______ and ______ unit personnel who bring enthusiasm to the training-readiness process.</div>
-
-<label class="option" data-q="51" data-i="0">
-<input type="radio" name="q51" value="0">
-<span><strong>A.</strong> most knowledgeable, experienced</span>
-</label><label class="option" data-q="51" data-i="1">
-<input type="radio" name="q51" value="1">
-<span><strong>B.</strong> most interesting, entertaining</span>
-</label><label class="option" data-q="51" data-i="2">
-<input type="radio" name="q51" value="2">
-<span><strong>C.</strong> most active, superior</span>
-</label><label class="option" data-q="51" data-i="3">
-<input type="radio" name="q51" value="3">
-<span><strong>D.</strong> most talkative, cooperating</span>
-</label>
-<div class="feedback" id="fb-51"></div>
-</section><section class="card" id="card-52">
-<div class="qtitle">52. Who is responsible for the oversight of the CRTT?</div>
-
-<label class="option" data-q="52" data-i="0">
-<input type="radio" name="q52" value="0">
-<span><strong>A.</strong> Commanding Officer</span>
-</label><label class="option" data-q="52" data-i="1">
-<input type="radio" name="q52" value="1">
-<span><strong>B.</strong> Leading Petty Officer</span>
-</label><label class="option" data-q="52" data-i="2">
-<input type="radio" name="q52" value="2">
-<span><strong>C.</strong> COMNAVIFOR</span>
-</label><label class="option" data-q="52" data-i="3">
-<input type="radio" name="q52" value="3">
-<span><strong>D.</strong> Executive Officer</span>
-</label>
-<div class="feedback" id="fb-52"></div>
-</section><section class="card" id="card-53">
-<div class="qtitle">53. Which of the following must CRTT-assigned personnel have completed?</div>
-
-<label class="option" data-q="53" data-i="0">
-<input type="radio" name="q53" value="0">
-<span><strong>A.</strong> Personnel Qualification Standards</span>
-</label><label class="option" data-q="53" data-i="1">
-<input type="radio" name="q53" value="1">
-<span><strong>B.</strong> Job Qualification Requirement</span>
-</label><label class="option" data-q="53" data-i="2">
-<input type="radio" name="q53" value="2">
-<span><strong>C.</strong> Both A &amp; B</span>
-</label><label class="option" data-q="53" data-i="3">
-<input type="radio" name="q53" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-53"></div>
-</section><section class="card" id="card-54">
-<div class="qtitle">54. TRUE/FALSE: The CRTT Leader must know the training requirements, participate in the command’s Planning Board for Training (PB4T), and be empowered to assign personnel to the CRTT.</div>
-
-<label class="option" data-q="54" data-i="0">
-<input type="radio" name="q54" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="54" data-i="1">
-<input type="radio" name="q54" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-54"></div>
-</section><section class="card" id="card-55">
-<div class="qtitle">55. CRTT Exercise initiators will…</div>
-
-<label class="option" data-q="55" data-i="0">
-<input type="radio" name="q55" value="0">
-<span><strong>A.</strong> Review all steps in the exercise</span>
-</label><label class="option" data-q="55" data-i="1">
-<input type="radio" name="q55" value="1">
-<span><strong>B.</strong> Review ORM assessment and controls</span>
-</label><label class="option" data-q="55" data-i="2">
-<input type="radio" name="q55" value="2">
-<span><strong>C.</strong> Ensure initiation of the exercise per approved timeline</span>
-</label><label class="option" data-q="55" data-i="3">
-<input type="radio" name="q55" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-55"></div>
-</section><section class="card" id="card-56">
-<div class="qtitle">56. TRUE/FALSE: CRTT evaluators may also act as initiators or safety observers.</div>
-
-<label class="option" data-q="56" data-i="0">
-<input type="radio" name="q56" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="56" data-i="1">
-<input type="radio" name="q56" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-56"></div>
-</section><section class="card" id="card-57">
-<div class="qtitle">57. Which of the following is NOT a duty of CRTT evaluators?</div>
-
-<label class="option" data-q="57" data-i="0">
-<input type="radio" name="q57" value="0">
-<span><strong>A.</strong> Be prepared to assume the role as trainer vice evaluator when needed</span>
-</label><label class="option" data-q="57" data-i="1">
-<input type="radio" name="q57" value="1">
-<span><strong>B.</strong> Provide a post-exercise debrief on observations, scores, lessons learned, and corrective-action recommendations</span>
-</label><label class="option" data-q="57" data-i="2">
-<input type="radio" name="q57" value="2">
-<span><strong>C.</strong> Provide immediate feedback to the exercise audience upon completion of the event</span>
-</label><label class="option" data-q="57" data-i="3">
-<input type="radio" name="q57" value="3">
-<span><strong>D.</strong> Brief the Executive Officer on the overall score and results of the recent event</span>
-</label>
-<div class="feedback" id="fb-57"></div>
-</section><section class="card" id="card-58">
-<div class="qtitle">58. Which of the following is a duty of CRTT Trusted Agents?</div>
-
-<label class="option" data-q="58" data-i="0">
-<input type="radio" name="q58" value="0">
-<span><strong>A.</strong> Support the drill as briefed by the applicable CRTT</span>
-</label><label class="option" data-q="58" data-i="1">
-<input type="radio" name="q58" value="1">
-<span><strong>B.</strong> Submit the exercise package to the CRTT Coordinator before the event</span>
-</label><label class="option" data-q="58" data-i="2">
-<input type="radio" name="q58" value="2">
-<span><strong>C.</strong> Complete a written exam for assessment of capabilities available from the trusted agent</span>
-</label><label class="option" data-q="58" data-i="3">
-<input type="radio" name="q58" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-58"></div>
-</section><section class="card" id="card-59">
-<div class="qtitle">59. TRUE/FALSE: CRT members may be assigned to observe more than one area of the evolution only if all personnel can be supervised and observed without degrading safety or exercise integrity.</div>
-
-<label class="option" data-q="59" data-i="0">
-<input type="radio" name="q59" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="59" data-i="1">
-<input type="radio" name="q59" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-59"></div>
-</section><section class="card" id="card-60">
-<div class="qtitle">60. As part of the CRTT qualification process, team members need to be conversant with which of the following?</div>
-
-<label class="option" data-q="60" data-i="0">
-<input type="radio" name="q60" value="0">
-<span><strong>A.</strong> Tactical Memorandum</span>
-</label><label class="option" data-q="60" data-i="1">
-<input type="radio" name="q60" value="1">
-<span><strong>B.</strong> CO’s Battle Orders</span>
-</label><label class="option" data-q="60" data-i="2">
-<input type="radio" name="q60" value="2">
-<span><strong>C.</strong> Both A &amp; B</span>
-</label><label class="option" data-q="60" data-i="3">
-<input type="radio" name="q60" value="3">
-<span><strong>D.</strong> None of the above</span>
-</label>
-<div class="feedback" id="fb-60"></div>
-</section><section class="card" id="card-61">
-<div class="qtitle">61. TRUE/FALSE: CRTT members must complete applicable PQS and JQR for their respective positions.</div>
-
-<label class="option" data-q="61" data-i="0">
-<input type="radio" name="q61" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="61" data-i="1">
-<input type="radio" name="q61" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-61"></div>
-</section><section class="card" id="card-62">
-<div class="qtitle">62. Which of the following is NOT a phase of the Navy Warfare Training System?</div>
-
-<label class="option" data-q="62" data-i="0">
-<input type="radio" name="q62" value="0">
-<span><strong>A.</strong> Requirements</span>
-</label><label class="option" data-q="62" data-i="1">
-<input type="radio" name="q62" value="1">
-<span><strong>B.</strong> Plans</span>
-</label><label class="option" data-q="62" data-i="2">
-<input type="radio" name="q62" value="2">
-<span><strong>C.</strong> Feedback</span>
-</label><label class="option" data-q="62" data-i="3">
-<input type="radio" name="q62" value="3">
-<span><strong>D.</strong> Execution</span>
-</label>
-<div class="feedback" id="fb-62"></div>
-</section><section class="card" id="card-63">
-<div class="qtitle">63. Which phase of the Navy Warfare Training System translates strategy, operational plans, and higher-headquarters guidance into capabilities and tasks via mission analysis?</div>
-
-<label class="option" data-q="63" data-i="0">
-<input type="radio" name="q63" value="0">
-<span><strong>A.</strong> Requirements</span>
-</label><label class="option" data-q="63" data-i="1">
-<input type="radio" name="q63" value="1">
-<span><strong>B.</strong> Plans</span>
-</label><label class="option" data-q="63" data-i="2">
-<input type="radio" name="q63" value="2">
-<span><strong>C.</strong> Execution</span>
-</label><label class="option" data-q="63" data-i="3">
-<input type="radio" name="q63" value="3">
-<span><strong>D.</strong> Assessment</span>
-</label>
-<div class="feedback" id="fb-63"></div>
-</section><section class="card" id="card-64">
-<div class="qtitle">64. Which phase of the Navy Warfare Training System employs an integrated process to develop the NWTP and schedules and estimates resource requirements?</div>
-
-<label class="option" data-q="64" data-i="0">
-<input type="radio" name="q64" value="0">
-<span><strong>A.</strong> Requirements</span>
-</label><label class="option" data-q="64" data-i="1">
-<input type="radio" name="q64" value="1">
-<span><strong>B.</strong> Plans</span>
-</label><label class="option" data-q="64" data-i="2">
-<input type="radio" name="q64" value="2">
-<span><strong>C.</strong> Execution</span>
-</label><label class="option" data-q="64" data-i="3">
-<input type="radio" name="q64" value="3">
-<span><strong>D.</strong> Assessment</span>
-</label>
-<div class="feedback" id="fb-64"></div>
-</section><section class="card" id="card-65">
-<div class="qtitle">65. Which of the following is developed to evaluate performance standards required for mission success and coordinate all UXP-based events at the activity level?</div>
-
-<label class="option" data-q="65" data-i="0">
-<input type="radio" name="q65" value="0">
-<span><strong>A.</strong> NMET</span>
-</label><label class="option" data-q="65" data-i="1">
-<input type="radio" name="q65" value="1">
-<span><strong>B.</strong> NWTP</span>
-</label><label class="option" data-q="65" data-i="2">
-<input type="radio" name="q65" value="2">
-<span><strong>C.</strong> CRA</span>
-</label><label class="option" data-q="65" data-i="3">
-<input type="radio" name="q65" value="3">
-<span><strong>D.</strong> NTIMS</span>
-</label>
-<div class="feedback" id="fb-65"></div>
-</section><section class="card" id="card-66">
-<div class="qtitle">66. Which phase of the Navy Warfare Training System has commanders and trainers conduct UXPs and monitor and evaluate performance based on assigned NTA standards?</div>
-
-<label class="option" data-q="66" data-i="0">
-<input type="radio" name="q66" value="0">
-<span><strong>A.</strong> Requirements</span>
-</label><label class="option" data-q="66" data-i="1">
-<input type="radio" name="q66" value="1">
-<span><strong>B.</strong> Plans</span>
-</label><label class="option" data-q="66" data-i="2">
-<input type="radio" name="q66" value="2">
-<span><strong>C.</strong> Execution</span>
-</label><label class="option" data-q="66" data-i="3">
-<input type="radio" name="q66" value="3">
-<span><strong>D.</strong> Assessment</span>
-</label>
-<div class="feedback" id="fb-66"></div>
-</section><section class="card" id="card-67">
-<div class="qtitle">67. Which phase of the Navy Warfare Training System is the culminating point for issues observed throughout the previous phases?</div>
-
-<label class="option" data-q="67" data-i="0">
-<input type="radio" name="q67" value="0">
-<span><strong>A.</strong> Requirements</span>
-</label><label class="option" data-q="67" data-i="1">
-<input type="radio" name="q67" value="1">
-<span><strong>B.</strong> Execution</span>
-</label><label class="option" data-q="67" data-i="2">
-<input type="radio" name="q67" value="2">
-<span><strong>C.</strong> Assessment</span>
-</label><label class="option" data-q="67" data-i="3">
-<input type="radio" name="q67" value="3">
-<span><strong>D.</strong> Plans</span>
-</label>
-<div class="feedback" id="fb-67"></div>
-</section><section class="card" id="card-68">
-<div class="qtitle">68. Who assesses the overall readiness of their organizations based on assigned NMETs and the executed NWTP during the Assessment Phase?</div>
-
-<label class="option" data-q="68" data-i="0">
-<input type="radio" name="q68" value="0">
-<span><strong>A.</strong> XO</span>
-</label><label class="option" data-q="68" data-i="1">
-<input type="radio" name="q68" value="1">
-<span><strong>B.</strong> CO</span>
-</label><label class="option" data-q="68" data-i="2">
-<input type="radio" name="q68" value="2">
-<span><strong>C.</strong> CMC</span>
-</label><label class="option" data-q="68" data-i="3">
-<input type="radio" name="q68" value="3">
-<span><strong>D.</strong> Team Lead</span>
-</label>
-<div class="feedback" id="fb-68"></div>
-</section><section class="card" id="card-69">
-<div class="qtitle">69. Which of the following is a web-enabled application consisting of an integrated suite of information-management tools?</div>
-
-<label class="option" data-q="69" data-i="0">
-<input type="radio" name="q69" value="0">
-<span><strong>A.</strong> NMETL</span>
-</label><label class="option" data-q="69" data-i="1">
-<input type="radio" name="q69" value="1">
-<span><strong>B.</strong> UXP</span>
-</label><label class="option" data-q="69" data-i="2">
-<input type="radio" name="q69" value="2">
-<span><strong>C.</strong> NTIMS</span>
-</label><label class="option" data-q="69" data-i="3">
-<input type="radio" name="q69" value="3">
-<span><strong>D.</strong> NWTP</span>
-</label>
-<div class="feedback" id="fb-69"></div>
-</section><section class="card" id="card-70">
-<div class="qtitle">70. Which is a near-real-time, web-based tool used to assist Navy leaders in readiness assessments and capability-based tasking decisions?</div>
-
-<label class="option" data-q="70" data-i="0">
-<input type="radio" name="q70" value="0">
-<span><strong>A.</strong> DRRS-N</span>
-</label><label class="option" data-q="70" data-i="1">
-<input type="radio" name="q70" value="1">
-<span><strong>B.</strong> FLTMPS</span>
-</label><label class="option" data-q="70" data-i="2">
-<input type="radio" name="q70" value="2">
-<span><strong>C.</strong> NTIMS</span>
-</label><label class="option" data-q="70" data-i="3">
-<input type="radio" name="q70" value="3">
-<span><strong>D.</strong> TFOM</span>
-</label>
-<div class="feedback" id="fb-70"></div>
-</section><section class="card" id="card-71">
-<div class="qtitle">71. What forms are used to record performance scores?</div>
-
-<label class="option" data-q="71" data-i="0">
-<input type="radio" name="q71" value="0">
-<span><strong>A.</strong> CRTT Scorecards</span>
-</label><label class="option" data-q="71" data-i="1">
-<input type="radio" name="q71" value="1">
-<span><strong>B.</strong> Performance assessment form</span>
-</label><label class="option" data-q="71" data-i="2">
-<input type="radio" name="q71" value="2">
-<span><strong>C.</strong> Data Collection Sheets</span>
-</label><label class="option" data-q="71" data-i="3">
-<input type="radio" name="q71" value="3">
-<span><strong>D.</strong> M-3502.1</span>
-</label>
-<div class="feedback" id="fb-71"></div>
-</section><section class="card" id="card-72">
-<div class="qtitle">72. By which medium do evaluators access NTIMS?</div>
-
-<label class="option" data-q="72" data-i="0">
-<input type="radio" name="q72" value="0">
-<span><strong>A.</strong> JWICS</span>
-</label><label class="option" data-q="72" data-i="1">
-<input type="radio" name="q72" value="1">
-<span><strong>B.</strong> SIPRNET</span>
-</label><label class="option" data-q="72" data-i="2">
-<input type="radio" name="q72" value="2">
-<span><strong>C.</strong> NIPRNET</span>
-</label><label class="option" data-q="72" data-i="3">
-<input type="radio" name="q72" value="3">
-<span><strong>D.</strong> NSAnet</span>
-</label>
-<div class="feedback" id="fb-72"></div>
-</section><section class="card" id="card-73">
-<div class="qtitle">73. What entity coordinates mission analysis, review, and approval of all NAVIFOR NMET development and refinement?</div>
-
-<label class="option" data-q="73" data-i="0">
-<input type="radio" name="q73" value="0">
-<span><strong>A.</strong> CRA</span>
-</label><label class="option" data-q="73" data-i="1">
-<input type="radio" name="q73" value="1">
-<span><strong>B.</strong> FLTCYBERCOM</span>
-</label><label class="option" data-q="73" data-i="2">
-<input type="radio" name="q73" value="2">
-<span><strong>C.</strong> ONI</span>
-</label><label class="option" data-q="73" data-i="3">
-<input type="radio" name="q73" value="3">
-<span><strong>D.</strong> CNMOC</span>
-</label>
-<div class="feedback" id="fb-73"></div>
-</section><section class="card" id="card-74">
-<div class="qtitle">74. The T-Pillar is comprised of what two factors?</div>
-
-<label class="option" data-q="74" data-i="0">
-<input type="radio" name="q74" value="0">
-<span><strong>A.</strong> Performance and Experience</span>
-</label><label class="option" data-q="74" data-i="1">
-<input type="radio" name="q74" value="1">
-<span><strong>B.</strong> Management and Feedback</span>
-</label><label class="option" data-q="74" data-i="2">
-<input type="radio" name="q74" value="2">
-<span><strong>C.</strong> Training and Leadership</span>
-</label><label class="option" data-q="74" data-i="3">
-<input type="radio" name="q74" value="3">
-<span><strong>D.</strong> Doctrine and Evaluation</span>
-</label>
-<div class="feedback" id="fb-74"></div>
-</section><section class="card" id="card-75">
-<div class="qtitle">75. What is the primary vehicle for reporting completion of required evaluations?</div>
-
-<label class="option" data-q="75" data-i="0">
-<input type="radio" name="q75" value="0">
-<span><strong>A.</strong> DRRS-N</span>
-</label><label class="option" data-q="75" data-i="1">
-<input type="radio" name="q75" value="1">
-<span><strong>B.</strong> NTA</span>
-</label><label class="option" data-q="75" data-i="2">
-<input type="radio" name="q75" value="2">
-<span><strong>C.</strong> PB4T</span>
-</label><label class="option" data-q="75" data-i="3">
-<input type="radio" name="q75" value="3">
-<span><strong>D.</strong> NTIMS</span>
-</label>
-<div class="feedback" id="fb-75"></div>
-</section><section class="card" id="card-76">
-<div class="qtitle">76. What are the two types of training plans utilized with the NWTP?</div>
-
-<label class="option" data-q="76" data-i="0">
-<input type="radio" name="q76" value="0">
-<span><strong>A.</strong> Strategic and Research</span>
-</label><label class="option" data-q="76" data-i="1">
-<input type="radio" name="q76" value="1">
-<span><strong>B.</strong> Short range and Long range</span>
-</label><label class="option" data-q="76" data-i="2">
-<input type="radio" name="q76" value="2">
-<span><strong>C.</strong> Broad and Scoped</span>
-</label><label class="option" data-q="76" data-i="3">
-<input type="radio" name="q76" value="3">
-<span><strong>D.</strong> Unit level and Organization level</span>
-</label>
-<div class="feedback" id="fb-76"></div>
-</section><section class="card" id="card-77">
-<div class="qtitle">77. Which of the following is NOT a factor to consider during development of an exercise package?</div>
-
-<label class="option" data-q="77" data-i="0">
-<input type="radio" name="q77" value="0">
-<span><strong>A.</strong> Condition of the equipment</span>
-</label><label class="option" data-q="77" data-i="1">
-<input type="radio" name="q77" value="1">
-<span><strong>B.</strong> Safety and monitoring device</span>
-</label><label class="option" data-q="77" data-i="2">
-<input type="radio" name="q77" value="2">
-<span><strong>C.</strong> Emotions of individuals selected to perform the CRTT scenario</span>
-</label><label class="option" data-q="77" data-i="3">
-<input type="radio" name="q77" value="3">
-<span><strong>D.</strong> Complexity of the operating environment</span>
-</label>
-<div class="feedback" id="fb-77"></div>
-</section><section class="card" id="card-78">
-<div class="qtitle">78. Who must understand the important difference between an evaluation and an assessment?</div>
-
-<label class="option" data-q="78" data-i="0">
-<input type="radio" name="q78" value="0">
-<span><strong>A.</strong> COs</span>
-</label><label class="option" data-q="78" data-i="1">
-<input type="radio" name="q78" value="1">
-<span><strong>B.</strong> LPOs</span>
-</label><label class="option" data-q="78" data-i="2">
-<input type="radio" name="q78" value="2">
-<span><strong>C.</strong> You</span>
-</label><label class="option" data-q="78" data-i="3">
-<input type="radio" name="q78" value="3">
-<span><strong>D.</strong> NAVIFOR</span>
-</label>
-<div class="feedback" id="fb-78"></div>
-</section><section class="card" id="card-79">
-<div class="qtitle">79. TRUE/FALSE: DRRS-N is a near-real-time, web-based tool used to assist Navy leaders in performing readiness assessments and decision support for capability-based tasking.</div>
-
-<label class="option" data-q="79" data-i="0">
-<input type="radio" name="q79" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="79" data-i="1">
-<input type="radio" name="q79" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-79"></div>
-</section><section class="card" id="card-80">
-<div class="qtitle">80. What is the purpose of a Basic-level exercise scenario?</div>
-
-<label class="option" data-q="80" data-i="0">
-<input type="radio" name="q80" value="0">
-<span><strong>A.</strong> Test entry-level knowledge</span>
-</label><label class="option" data-q="80" data-i="1">
-<input type="radio" name="q80" value="1">
-<span><strong>B.</strong> Identify training faults</span>
-</label><label class="option" data-q="80" data-i="2">
-<input type="radio" name="q80" value="2">
-<span><strong>C.</strong> Meet approved readiness objectives requiring demonstration of mission-area core competency proficiency</span>
-</label><label class="option" data-q="80" data-i="3">
-<input type="radio" name="q80" value="3">
-<span><strong>D.</strong> Facilitate assessment of mission-area proficiencies and unit-wide synchronization between capability areas</span>
-</label>
-<div class="feedback" id="fb-80"></div>
-</section><section class="card" id="card-81">
-<div class="qtitle">81. What is the purpose of an Advanced-level exercise scenario?</div>
-
-<label class="option" data-q="81" data-i="0">
-<input type="radio" name="q81" value="0">
-<span><strong>A.</strong> Test entry-level knowledge</span>
-</label><label class="option" data-q="81" data-i="1">
-<input type="radio" name="q81" value="1">
-<span><strong>B.</strong> Identify training faults</span>
-</label><label class="option" data-q="81" data-i="2">
-<input type="radio" name="q81" value="2">
-<span><strong>C.</strong> Meet approved readiness objectives requiring demonstration of mission-area core competency proficiency</span>
-</label><label class="option" data-q="81" data-i="3">
-<input type="radio" name="q81" value="3">
-<span><strong>D.</strong> Facilitate assessment of mission-area proficiencies and unit-wide synchronization between capability areas</span>
-</label>
-<div class="feedback" id="fb-81"></div>
-</section><section class="card" id="card-82">
-<div class="qtitle">82. What is the purpose of the CRTT?</div>
-
-<label class="option" data-q="82" data-i="0">
-<input type="radio" name="q82" value="0">
-<span><strong>A.</strong> Plan, brief, conduct, and debrief exercise evolutions; raise exercise-audience knowledge; assess readiness/effectiveness; analyze deficiencies; and initiate corrective action</span>
-</label><label class="option" data-q="82" data-i="1">
-<input type="radio" name="q82" value="1">
-<span><strong>B.</strong> Create training plans</span>
-</label><label class="option" data-q="82" data-i="2">
-<input type="radio" name="q82" value="2">
-<span><strong>C.</strong> Instruct teams on USCYBERCOM policies</span>
-</label><label class="option" data-q="82" data-i="3">
-<input type="radio" name="q82" value="3">
-<span><strong>D.</strong> Facilitate command scenarios</span>
-</label>
-<div class="feedback" id="fb-82"></div>
-</section><section class="card" id="card-83">
-<div class="qtitle">83. What critical areas must training-pillar scenarios support?</div>
-
-<label class="option" data-q="83" data-i="0">
-<input type="radio" name="q83" value="0">
-<span><strong>A.</strong> Stress basic competencies and skills in all assigned mission areas; be tactically challenging, realistic, and reflective of expected events; minimize restrictions and simulations</span>
-</label><label class="option" data-q="83" data-i="1">
-<input type="radio" name="q83" value="1">
-<span><strong>B.</strong> Shortfalls in planning</span>
-</label><label class="option" data-q="83" data-i="2">
-<input type="radio" name="q83" value="2">
-<span><strong>C.</strong> Analyze problem areas</span>
-</label><label class="option" data-q="83" data-i="3">
-<input type="radio" name="q83" value="3">
-<span><strong>D.</strong> Validation of training objectives</span>
-</label>
-<div class="feedback" id="fb-83"></div>
-</section><section class="card" id="card-84">
-<div class="qtitle">84. What is the first and most difficult phase of developing a UXP-based scenario?</div>
-
-<label class="option" data-q="84" data-i="0">
-<input type="radio" name="q84" value="0">
-<span><strong>A.</strong> Identifying the position of analyst</span>
-</label><label class="option" data-q="84" data-i="1">
-<input type="radio" name="q84" value="1">
-<span><strong>B.</strong> Defining the objectives</span>
-</label><label class="option" data-q="84" data-i="2">
-<input type="radio" name="q84" value="2">
-<span><strong>C.</strong> Identifying mission policies</span>
-</label><label class="option" data-q="84" data-i="3">
-<input type="radio" name="q84" value="3">
-<span><strong>D.</strong> Creating multiple command scenarios</span>
-</label>
-<div class="feedback" id="fb-84"></div>
-</section><section class="card" id="card-85">
-<div class="qtitle">85. TRUE/FALSE: All exercise audiences being evaluated must be fully qualified in that role.</div>
-
-<label class="option" data-q="85" data-i="0">
-<input type="radio" name="q85" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="85" data-i="1">
-<input type="radio" name="q85" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-85"></div>
-</section><section class="card" id="card-86">
-<div class="qtitle">86. What are the two areas into which lessons learned can be divided?</div>
-
-<label class="option" data-q="86" data-i="0">
-<input type="radio" name="q86" value="0">
-<span><strong>A.</strong> Pre-brief</span>
-</label><label class="option" data-q="86" data-i="1">
-<input type="radio" name="q86" value="1">
-<span><strong>B.</strong> Post-brief</span>
-</label><label class="option" data-q="86" data-i="2">
-<input type="radio" name="q86" value="2">
-<span><strong>C.</strong> During evaluation</span>
-</label><label class="option" data-q="86" data-i="3">
-<input type="radio" name="q86" value="3">
-<span><strong>D.</strong> Those pertaining to the scenario and CRTT conduct, and those pertaining to proficiency of the exercise audience</span>
-</label>
-<div class="feedback" id="fb-86"></div>
-</section><section class="card" id="card-87">
-<div class="qtitle">87. What are the two fundamental modes in which the CRTT operates?</div>
-
-<label class="option" data-q="87" data-i="0">
-<input type="radio" name="q87" value="0">
-<span><strong>A.</strong> Pre-ops and post-ops</span>
-</label><label class="option" data-q="87" data-i="1">
-<input type="radio" name="q87" value="1">
-<span><strong>B.</strong> Testing mode</span>
-</label><label class="option" data-q="87" data-i="2">
-<input type="radio" name="q87" value="2">
-<span><strong>C.</strong> Evaluation and training</span>
-</label><label class="option" data-q="87" data-i="3">
-<input type="radio" name="q87" value="3">
-<span><strong>D.</strong> Scenario mode</span>
-</label>
-<div class="feedback" id="fb-87"></div>
-</section><section class="card" id="card-88">
-<div class="qtitle">88. What is training mode used for?</div>
-
-<label class="option" data-q="88" data-i="0">
-<input type="radio" name="q88" value="0">
-<span><strong>A.</strong> Test qualified personnel</span>
-</label><label class="option" data-q="88" data-i="1">
-<input type="radio" name="q88" value="1">
-<span><strong>B.</strong> For inexperienced or unqualified personnel; CRTT assists throughout events and evaluates but does not submit training-mode scores</span>
-</label><label class="option" data-q="88" data-i="2">
-<input type="radio" name="q88" value="2">
-<span><strong>C.</strong> Timed evaluations</span>
-</label><label class="option" data-q="88" data-i="3">
-<input type="radio" name="q88" value="3">
-<span><strong>D.</strong> Scenario-based learning</span>
-</label>
-<div class="feedback" id="fb-88"></div>
-</section><section class="card" id="card-89">
-<div class="qtitle">89. State the purpose of an intermediate-level exercise.</div>
-
-<label class="option" data-q="89" data-i="0">
-<input type="radio" name="q89" value="0">
-<span><strong>A.</strong> Focus on simpler internal tasks emphasizing core skills, methods, and processes</span>
-</label><label class="option" data-q="89" data-i="1">
-<input type="radio" name="q89" value="1">
-<span><strong>B.</strong> Build on fundamental skills achieved in basic task execution and may add coordination, complexity, or task density</span>
-</label><label class="option" data-q="89" data-i="2">
-<input type="radio" name="q89" value="2">
-<span><strong>C.</strong> Test advanced-level task</span>
-</label><label class="option" data-q="89" data-i="3">
-<input type="radio" name="q89" value="3">
-<span><strong>D.</strong> Stress operational limits with the least resources under the most challenging conditions</span>
-</label>
-<div class="feedback" id="fb-89"></div>
-</section><section class="card" id="card-90">
-<div class="qtitle">90. TRUE/FALSE: All drill guides are approved by the CO.</div>
-
-<label class="option" data-q="90" data-i="0">
-<input type="radio" name="q90" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="90" data-i="1">
-<input type="radio" name="q90" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-90"></div>
-</section><section class="card" id="card-91">
-<div class="qtitle">91. Which assists in determining the CRTT length?</div>
-
-<label class="option" data-q="91" data-i="0">
-<input type="radio" name="q91" value="0">
-<span><strong>A.</strong> Evaluator</span>
-</label><label class="option" data-q="91" data-i="1">
-<input type="radio" name="q91" value="1">
-<span><strong>B.</strong> Assessor</span>
-</label><label class="option" data-q="91" data-i="2">
-<input type="radio" name="q91" value="2">
-<span><strong>C.</strong> CO</span>
-</label><label class="option" data-q="91" data-i="3">
-<input type="radio" name="q91" value="3">
-<span><strong>D.</strong> MSEL</span>
-</label>
-<div class="feedback" id="fb-91"></div>
-</section><section class="card" id="card-92">
-<div class="qtitle">92. Which individual maintains the CRTT master set of exercise packages?</div>
-
-<label class="option" data-q="92" data-i="0">
-<input type="radio" name="q92" value="0">
-<span><strong>A.</strong> CO</span>
-</label><label class="option" data-q="92" data-i="1">
-<input type="radio" name="q92" value="1">
-<span><strong>B.</strong> CRTT Coordinator</span>
-</label><label class="option" data-q="92" data-i="2">
-<input type="radio" name="q92" value="2">
-<span><strong>C.</strong> XO</span>
-</label><label class="option" data-q="92" data-i="3">
-<input type="radio" name="q92" value="3">
-<span><strong>D.</strong> CRTT Evaluator</span>
-</label>
-<div class="feedback" id="fb-92"></div>
-</section><section class="card" id="card-93">
-<div class="qtitle">93. TRUE/FALSE: Slight changes and modifications to the package due to observations and lessons learned do not require the CO to re-sign the exercise package.</div>
-
-<label class="option" data-q="93" data-i="0">
-<input type="radio" name="q93" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="93" data-i="1">
-<input type="radio" name="q93" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-93"></div>
-</section><section class="card" id="card-94">
-<div class="qtitle">94. TRUE/FALSE: You are not required to identify all CRTT team assignments before evaluation.</div>
-
-<label class="option" data-q="94" data-i="0">
-<input type="radio" name="q94" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="94" data-i="1">
-<input type="radio" name="q94" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-94"></div>
-</section><section class="card" id="card-95">
-<div class="qtitle">95. TRUE/FALSE: Condition of Readiness will identify Threat Warning and Emissions Control (EMCON) status.</div>
-
-<label class="option" data-q="95" data-i="0">
-<input type="radio" name="q95" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="95" data-i="1">
-<input type="radio" name="q95" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-95"></div>
-</section><section class="card" id="card-96">
-<div class="qtitle">96. Who conducts the CRTT pre-brief?</div>
-
-<label class="option" data-q="96" data-i="0">
-<input type="radio" name="q96" value="0">
-<span><strong>A.</strong> CRTT Coordinator</span>
-</label><label class="option" data-q="96" data-i="1">
-<input type="radio" name="q96" value="1">
-<span><strong>B.</strong> CRTT Evaluator</span>
-</label><label class="option" data-q="96" data-i="2">
-<input type="radio" name="q96" value="2">
-<span><strong>C.</strong> Safety Officer</span>
-</label><label class="option" data-q="96" data-i="3">
-<input type="radio" name="q96" value="3">
-<span><strong>D.</strong> CRTT Leader</span>
-</label>
-<div class="feedback" id="fb-96"></div>
-</section><section class="card" id="card-97">
-<div class="qtitle">97. TRUE/FALSE: The CRTT will conduct a pre-brief to ensure the exercise audience understands the scenario, exercise environment, and geopolitical elements.</div>
-
-<label class="option" data-q="97" data-i="0">
-<input type="radio" name="q97" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="97" data-i="1">
-<input type="radio" name="q97" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-97"></div>
-</section><section class="card" id="card-98">
-<div class="qtitle">98. Who conducts the individual exercise debrief?</div>
-
-<label class="option" data-q="98" data-i="0">
-<input type="radio" name="q98" value="0">
-<span><strong>A.</strong> CRTT Evaluator</span>
-</label><label class="option" data-q="98" data-i="1">
-<input type="radio" name="q98" value="1">
-<span><strong>B.</strong> CRTT Observer</span>
-</label><label class="option" data-q="98" data-i="2">
-<input type="radio" name="q98" value="2">
-<span><strong>C.</strong> CRTT Leader</span>
-</label><label class="option" data-q="98" data-i="3">
-<input type="radio" name="q98" value="3">
-<span><strong>D.</strong> CRTT Coordinator</span>
-</label>
-<div class="feedback" id="fb-98"></div>
-</section><section class="card" id="card-99">
-<div class="qtitle">99. What items should the pre-brief include? Select all that apply.</div>
-<div class="note">Select all that apply.</div>
-<label class="option" data-q="99" data-i="0">
-<input type="checkbox" name="q99" value="0">
-<span><strong>A.</strong> Standing rules of play</span>
-</label><label class="option" data-q="99" data-i="1">
-<input type="checkbox" name="q99" value="1">
-<span><strong>B.</strong> Current tactical situation</span>
-</label><label class="option" data-q="99" data-i="2">
-<input type="checkbox" name="q99" value="2">
-<span><strong>C.</strong> Break period</span>
-</label><label class="option" data-q="99" data-i="3">
-<input type="checkbox" name="q99" value="3">
-<span><strong>D.</strong> Communications plan</span>
-</label><label class="option" data-q="99" data-i="4">
-<input type="checkbox" name="q99" value="4">
-<span><strong>E.</strong> Plan of the day</span>
-</label>
-<div class="feedback" id="fb-99"></div>
-</section><section class="card" id="card-100">
-<div class="qtitle">100. What are the three elements that make up safety?</div>
-
-<label class="option" data-q="100" data-i="0">
-<input type="radio" name="q100" value="0">
-<span><strong>A.</strong> Safety time out, training time out, building egress</span>
-</label><label class="option" data-q="100" data-i="1">
-<input type="radio" name="q100" value="1">
-<span><strong>B.</strong> Safety time out, actual casualty, internal threat</span>
-</label><label class="option" data-q="100" data-i="2">
-<input type="radio" name="q100" value="2">
-<span><strong>C.</strong> Safety time out, training time out, actual casualty</span>
-</label><label class="option" data-q="100" data-i="3">
-<input type="radio" name="q100" value="3">
-<span><strong>D.</strong> Actual casualty, training time out, CPR</span>
-</label>
-<div class="feedback" id="fb-100"></div>
-</section><section class="card" id="card-101">
-<div class="qtitle">101. Which is required of CRTT members at scenario start?</div>
-
-<label class="option" data-q="101" data-i="0">
-<input type="radio" name="q101" value="0">
-<span><strong>A.</strong> Start training devices</span>
-</label><label class="option" data-q="101" data-i="1">
-<input type="radio" name="q101" value="1">
-<span><strong>B.</strong> Make required initial disclosures</span>
-</label><label class="option" data-q="101" data-i="2">
-<input type="radio" name="q101" value="2">
-<span><strong>C.</strong> Be alert for safety violations</span>
-</label><label class="option" data-q="101" data-i="3">
-<input type="radio" name="q101" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-101"></div>
-</section><section class="card" id="card-102">
-<div class="qtitle">102. Before the scenario begins, the CRTT leader or delegated authority must…</div>
-
-<label class="option" data-q="102" data-i="0">
-<input type="radio" name="q102" value="0">
-<span><strong>A.</strong> Conduct time-checks</span>
-</label><label class="option" data-q="102" data-i="1">
-<input type="radio" name="q102" value="1">
-<span><strong>B.</strong> Review equipment configurations and setup</span>
-</label><label class="option" data-q="102" data-i="2">
-<input type="radio" name="q102" value="2">
-<span><strong>C.</strong> Conduct communications check</span>
-</label><label class="option" data-q="102" data-i="3">
-<input type="radio" name="q102" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-102"></div>
-</section><section class="card" id="card-103">
-<div class="qtitle">103. The CRTT will conduct a ____ to ensure the exercise audience completely understands the scenario, exercise environment, and geopolitical elements.</div>
-
-<label class="option" data-q="103" data-i="0">
-<input type="radio" name="q103" value="0">
-<span><strong>A.</strong> Pre-brief</span>
-</label><label class="option" data-q="103" data-i="1">
-<input type="radio" name="q103" value="1">
-<span><strong>B.</strong> Post-brief</span>
-</label><label class="option" data-q="103" data-i="2">
-<input type="radio" name="q103" value="2">
-<span><strong>C.</strong> Individual Exercise Debrief</span>
-</label><label class="option" data-q="103" data-i="3">
-<input type="radio" name="q103" value="3">
-<span><strong>D.</strong> Leader brief</span>
-</label>
-<div class="feedback" id="fb-103"></div>
-</section><section class="card" id="card-104">
-<div class="qtitle">104. The CRTT leader will conduct the CRTT ____ to ensure all CRTT members understand the exercise.</div>
-
-<label class="option" data-q="104" data-i="0">
-<input type="radio" name="q104" value="0">
-<span><strong>A.</strong> Pre-brief</span>
-</label><label class="option" data-q="104" data-i="1">
-<input type="radio" name="q104" value="1">
-<span><strong>B.</strong> Post-brief</span>
-</label><label class="option" data-q="104" data-i="2">
-<input type="radio" name="q104" value="2">
-<span><strong>C.</strong> Individual Exercise Debrief</span>
-</label><label class="option" data-q="104" data-i="3">
-<input type="radio" name="q104" value="3">
-<span><strong>D.</strong> Leader brief</span>
-</label>
-<div class="feedback" id="fb-104"></div>
-</section><section class="card" id="card-105">
-<div class="qtitle">105. What product is used to maintain exercise integrity?</div>
-
-<label class="option" data-q="105" data-i="0">
-<input type="radio" name="q105" value="0">
-<span><strong>A.</strong> CNN</span>
-</label><label class="option" data-q="105" data-i="1">
-<input type="radio" name="q105" value="1">
-<span><strong>B.</strong> Skype</span>
-</label><label class="option" data-q="105" data-i="2">
-<input type="radio" name="q105" value="2">
-<span><strong>C.</strong> MSEL</span>
-</label><label class="option" data-q="105" data-i="3">
-<input type="radio" name="q105" value="3">
-<span><strong>D.</strong> ROE</span>
-</label>
-<div class="feedback" id="fb-105"></div>
-</section><section class="card" id="card-106">
-<div class="qtitle">106. Who assists the CRTT leader in soliciting exercise-audience feedback?</div>
-
-<label class="option" data-q="106" data-i="0">
-<input type="radio" name="q106" value="0">
-<span><strong>A.</strong> White cell</span>
-</label><label class="option" data-q="106" data-i="1">
-<input type="radio" name="q106" value="1">
-<span><strong>B.</strong> Safety officer</span>
-</label><label class="option" data-q="106" data-i="2">
-<input type="radio" name="q106" value="2">
-<span><strong>C.</strong> CRTT members</span>
-</label><label class="option" data-q="106" data-i="3">
-<input type="radio" name="q106" value="3">
-<span><strong>D.</strong> CRTT observer</span>
-</label>
-<div class="feedback" id="fb-106"></div>
-</section><section class="card" id="card-107">
-<div class="qtitle">107. TRUE/FALSE: Debriefs focus on individual performances.</div>
-
-<label class="option" data-q="107" data-i="0">
-<input type="radio" name="q107" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="107" data-i="1">
-<input type="radio" name="q107" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-107"></div>
-</section><section class="card" id="card-108">
-<div class="qtitle">108. TRUE/FALSE: Debriefs focus on teamwork skills.</div>
-
-<label class="option" data-q="108" data-i="0">
-<input type="radio" name="q108" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="108" data-i="1">
-<input type="radio" name="q108" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-108"></div>
-</section><section class="card" id="card-109">
-<div class="qtitle">109. TRUE/FALSE: The CRTT Leader should allow CRTT members to be self-critical.</div>
-
-<label class="option" data-q="109" data-i="0">
-<input type="radio" name="q109" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="109" data-i="1">
-<input type="radio" name="q109" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-109"></div>
-</section><section class="card" id="card-110">
-<div class="qtitle">110. Which of the following will the CRTT leader debrief and discuss?</div>
-
-<label class="option" data-q="110" data-i="0">
-<input type="radio" name="q110" value="0">
-<span><strong>A.</strong> Whether scenario objectives were met or not met</span>
-</label><label class="option" data-q="110" data-i="1">
-<input type="radio" name="q110" value="1">
-<span><strong>B.</strong> Safety and security discrepancies and concerns</span>
-</label><label class="option" data-q="110" data-i="2">
-<input type="radio" name="q110" value="2">
-<span><strong>C.</strong> Strengths and weaknesses</span>
-</label><label class="option" data-q="110" data-i="3">
-<input type="radio" name="q110" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-110"></div>
-</section><section class="card" id="card-111">
-<div class="qtitle">111. Where can one find an exercise background brief?</div>
-
-<label class="option" data-q="111" data-i="0">
-<input type="radio" name="q111" value="0">
-<span><strong>A.</strong> Appendix O – Airborne SIGINT Qualification Criteria</span>
-</label><label class="option" data-q="111" data-i="1">
-<input type="radio" name="q111" value="1">
-<span><strong>B.</strong> Appendix M – Fleet Intelligence Detachment Certification Criteria</span>
-</label><label class="option" data-q="111" data-i="2">
-<input type="radio" name="q111" value="2">
-<span><strong>C.</strong> Appendix C – Sample Background Brief</span>
-</label><label class="option" data-q="111" data-i="3">
-<input type="radio" name="q111" value="3">
-<span><strong>D.</strong> Appendix Z</span>
-</label>
-<div class="feedback" id="fb-111"></div>
-</section><section class="card" id="card-112">
-<div class="qtitle">112. Where can you find the standing rules of play example?</div>
-
-<label class="option" data-q="112" data-i="0">
-<input type="radio" name="q112" value="0">
-<span><strong>A.</strong> Appendix O – Airborne SIGINT Qualification Criteria</span>
-</label><label class="option" data-q="112" data-i="1">
-<input type="radio" name="q112" value="1">
-<span><strong>B.</strong> Appendix C – Sample Background Brief</span>
-</label><label class="option" data-q="112" data-i="2">
-<input type="radio" name="q112" value="2">
-<span><strong>C.</strong> Appendix Q – CND Certification Criteria</span>
-</label><label class="option" data-q="112" data-i="3">
-<input type="radio" name="q112" value="3">
-<span><strong>D.</strong> Appendix D – Standard Rules of Play</span>
-</label>
-<div class="feedback" id="fb-112"></div>
-</section><section class="card" id="card-113">
-<div class="qtitle">113. TRUE/FALSE: Participants are expected to make decisions and respond to exercise events as realistically as possible.</div>
-
-<label class="option" data-q="113" data-i="0">
-<input type="radio" name="q113" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="113" data-i="1">
-<input type="radio" name="q113" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-113"></div>
-</section><section class="card" id="card-114">
-<div class="qtitle">114. Where can you find a sample team debrief and critique checklist?</div>
-
-<label class="option" data-q="114" data-i="0">
-<input type="radio" name="q114" value="0">
-<span><strong>A.</strong> Appendix A – Acronyms</span>
-</label><label class="option" data-q="114" data-i="1">
-<input type="radio" name="q114" value="1">
-<span><strong>B.</strong> Appendix E – Sample Team Debrief and Critique Checklist</span>
-</label><label class="option" data-q="114" data-i="2">
-<input type="radio" name="q114" value="2">
-<span><strong>C.</strong> Appendix D – Standard Rules of Play</span>
-</label><label class="option" data-q="114" data-i="3">
-<input type="radio" name="q114" value="3">
-<span><strong>D.</strong> Appendix F – Sample Lessons Learned Form</span>
-</label>
-<div class="feedback" id="fb-114"></div>
-</section><section class="card" id="card-115">
-<div class="qtitle">115. Where can you find a lessons-learned form?</div>
-
-<label class="option" data-q="115" data-i="0">
-<input type="radio" name="q115" value="0">
-<span><strong>A.</strong> Appendix B – Sample Exercise Package</span>
-</label><label class="option" data-q="115" data-i="1">
-<input type="radio" name="q115" value="1">
-<span><strong>B.</strong> Appendix S – ADNS INC III/BMD/MOC-IN-THE-MIDDLE Certification Criteria</span>
-</label><label class="option" data-q="115" data-i="2">
-<input type="radio" name="q115" value="2">
-<span><strong>C.</strong> Appendix F – Sample Lessons Learned Form</span>
-</label><label class="option" data-q="115" data-i="3">
-<input type="radio" name="q115" value="3">
-<span><strong>D.</strong> Appendix M – Fleet Intelligence Detachment Certification Criteria</span>
-</label>
-<div class="feedback" id="fb-115"></div>
-</section><section class="card" id="card-116">
-<div class="qtitle">116. How long must a lessons-learned form be maintained in hard-copy form?</div>
-
-<label class="option" data-q="116" data-i="0">
-<input type="radio" name="q116" value="0">
-<span><strong>A.</strong> 24 months</span>
-</label><label class="option" data-q="116" data-i="1">
-<input type="radio" name="q116" value="1">
-<span><strong>B.</strong> 6 months</span>
-</label><label class="option" data-q="116" data-i="2">
-<input type="radio" name="q116" value="2">
-<span><strong>C.</strong> 12 months</span>
-</label><label class="option" data-q="116" data-i="3">
-<input type="radio" name="q116" value="3">
-<span><strong>D.</strong> 48 months</span>
-</label>
-<div class="feedback" id="fb-116"></div>
-</section><section class="card" id="card-117">
-<div class="qtitle">117. _____ must review the lessons learned section of the scenario package each time a scenario is conducted.</div>
-
-<label class="option" data-q="117" data-i="0">
-<input type="radio" name="q117" value="0">
-<span><strong>A.</strong> Division Officer</span>
-</label><label class="option" data-q="117" data-i="1">
-<input type="radio" name="q117" value="1">
-<span><strong>B.</strong> Safety Officer</span>
-</label><label class="option" data-q="117" data-i="2">
-<input type="radio" name="q117" value="2">
-<span><strong>C.</strong> CRTT members</span>
-</label><label class="option" data-q="117" data-i="3">
-<input type="radio" name="q117" value="3">
-<span><strong>D.</strong> LPO</span>
-</label>
-<div class="feedback" id="fb-117"></div>
-</section><section class="card" id="card-118">
-<div class="qtitle">118. How long will submitted JLLIS entries be maintained for?</div>
-
-<label class="option" data-q="118" data-i="0">
-<input type="radio" name="q118" value="0">
-<span><strong>A.</strong> 12 Months</span>
-</label><label class="option" data-q="118" data-i="1">
-<input type="radio" name="q118" value="1">
-<span><strong>B.</strong> 2 Years</span>
-</label><label class="option" data-q="118" data-i="2">
-<input type="radio" name="q118" value="2">
-<span><strong>C.</strong> 5 Years</span>
-</label><label class="option" data-q="118" data-i="3">
-<input type="radio" name="q118" value="3">
-<span><strong>D.</strong> 36 Months</span>
-</label>
-<div class="feedback" id="fb-118"></div>
-</section><section class="card" id="card-119">
-<div class="qtitle">119. In the event of an actual casualty the term _____ will be used on the report.</div>
-
-<label class="option" data-q="119" data-i="0">
-<input type="radio" name="q119" value="0">
-<span><strong>A.</strong> Real world event</span>
-</label><label class="option" data-q="119" data-i="1">
-<input type="radio" name="q119" value="1">
-<span><strong>B.</strong> Actual casualty</span>
-</label><label class="option" data-q="119" data-i="2">
-<input type="radio" name="q119" value="2">
-<span><strong>C.</strong> Safety time out</span>
-</label><label class="option" data-q="119" data-i="3">
-<input type="radio" name="q119" value="3">
-<span><strong>D.</strong> Training time out</span>
-</label>
-<div class="feedback" id="fb-119"></div>
-</section><section class="card" id="card-120">
-<div class="qtitle">120. Where can you find an example of an ULTRA-C/S report?</div>
-
-<label class="option" data-q="120" data-i="0">
-<input type="radio" name="q120" value="0">
-<span><strong>A.</strong> Appendix G – Sample Ultra-C/S Message Report</span>
-</label><label class="option" data-q="120" data-i="1">
-<input type="radio" name="q120" value="1">
-<span><strong>B.</strong> Appendix F – Sample Lessons Learned Form</span>
-</label><label class="option" data-q="120" data-i="2">
-<input type="radio" name="q120" value="2">
-<span><strong>C.</strong> Appendix M – Fleet Intelligence Detachment Certification Criteria</span>
-</label><label class="option" data-q="120" data-i="3">
-<input type="radio" name="q120" value="3">
-<span><strong>D.</strong> Appendix T – METOC Direct Support Certification Criteria</span>
-</label>
-<div class="feedback" id="fb-120"></div>
-</section><section class="card" id="card-121">
-<div class="qtitle">121. What does INFTSP stand for?</div>
-
-<label class="option" data-q="121" data-i="0">
-<input type="radio" name="q121" value="0">
-<span><strong>A.</strong> Information support</span>
-</label><label class="option" data-q="121" data-i="1">
-<input type="radio" name="q121" value="1">
-<span><strong>B.</strong> Information sample</span>
-</label><label class="option" data-q="121" data-i="2">
-<input type="radio" name="q121" value="2">
-<span><strong>C.</strong> Information transport</span>
-</label><label class="option" data-q="121" data-i="3">
-<input type="radio" name="q121" value="3">
-<span><strong>D.</strong> Information speed</span>
-</label>
-<div class="feedback" id="fb-121"></div>
-</section><section class="card" id="card-122">
-<div class="qtitle">122. Where can you find information transport certification criteria?</div>
-
-<label class="option" data-q="122" data-i="0">
-<input type="radio" name="q122" value="0">
-<span><strong>A.</strong> Appendix F – Sample Lessons Learned Form</span>
-</label><label class="option" data-q="122" data-i="1">
-<input type="radio" name="q122" value="1">
-<span><strong>B.</strong> Appendix H – Information Transport (INFTSP) Certification Criteria</span>
-</label><label class="option" data-q="122" data-i="2">
-<input type="radio" name="q122" value="2">
-<span><strong>C.</strong> Appendix A – Acronyms</span>
-</label><label class="option" data-q="122" data-i="3">
-<input type="radio" name="q122" value="3">
-<span><strong>D.</strong> Appendix S – ADNS INC III/BMD/MOC-IN-THE-MIDDLE Certification Criteria</span>
-</label>
-<div class="feedback" id="fb-122"></div>
-</section><section class="card" id="card-123">
-<div class="qtitle">123. Where would you find network management certification criteria?</div>
-
-<label class="option" data-q="123" data-i="0">
-<input type="radio" name="q123" value="0">
-<span><strong>A.</strong> Appendix F – Sample Lessons Learned Form</span>
-</label><label class="option" data-q="123" data-i="1">
-<input type="radio" name="q123" value="1">
-<span><strong>B.</strong> Appendix H – Information Transport (INFTSP) Certification Criteria</span>
-</label><label class="option" data-q="123" data-i="2">
-<input type="radio" name="q123" value="2">
-<span><strong>C.</strong> Appendix A – Acronyms</span>
-</label><label class="option" data-q="123" data-i="3">
-<input type="radio" name="q123" value="3">
-<span><strong>D.</strong> Appendix I – Network Management Certification Criteria</span>
-</label>
-<div class="feedback" id="fb-123"></div>
-</section><section class="card" id="card-124">
-<div class="qtitle">124. TRUE/FALSE: ENTSVS stands for enterprise services.</div>
-
-<label class="option" data-q="124" data-i="0">
-<input type="radio" name="q124" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="124" data-i="1">
-<input type="radio" name="q124" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-124"></div>
-</section><section class="card" id="card-125">
-<div class="qtitle">125. Where would you find the enterprise services certification criteria?</div>
-
-<label class="option" data-q="125" data-i="0">
-<input type="radio" name="q125" value="0">
-<span><strong>A.</strong> Appendix B – Sample Exercise Package</span>
-</label><label class="option" data-q="125" data-i="1">
-<input type="radio" name="q125" value="1">
-<span><strong>B.</strong> Appendix J – Enterprise Service (ENTSVS) Certification Criteria</span>
-</label><label class="option" data-q="125" data-i="2">
-<input type="radio" name="q125" value="2">
-<span><strong>C.</strong> Appendix G – Sample Ultra-C/S Message Report</span>
-</label><label class="option" data-q="125" data-i="3">
-<input type="radio" name="q125" value="3">
-<span><strong>D.</strong> Appendix I – Network Management Certification Criteria</span>
-</label>
-<div class="feedback" id="fb-125"></div>
-</section><section class="card" id="card-126">
-<div class="qtitle">126. How long does COMNAVIFOR have to provide a formal report and a copy to the appropriate activity following an evaluation?</div>
-
-<label class="option" data-q="126" data-i="0">
-<input type="radio" name="q126" value="0">
-<span><strong>A.</strong> 7 days</span>
-</label><label class="option" data-q="126" data-i="1">
-<input type="radio" name="q126" value="1">
-<span><strong>B.</strong> 21 days</span>
-</label><label class="option" data-q="126" data-i="2">
-<input type="radio" name="q126" value="2">
-<span><strong>C.</strong> 3 months</span>
-</label><label class="option" data-q="126" data-i="3">
-<input type="radio" name="q126" value="3">
-<span><strong>D.</strong> 30 days</span>
-</label>
-<div class="feedback" id="fb-126"></div>
-</section><section class="card" id="card-127">
-<div class="qtitle">127. How soon after an activity’s NWTP implementation within NTIMS will ULTRA-C be conducted?</div>
-
-<label class="option" data-q="127" data-i="0">
-<input type="radio" name="q127" value="0">
-<span><strong>A.</strong> 6 months</span>
-</label><label class="option" data-q="127" data-i="1">
-<input type="radio" name="q127" value="1">
-<span><strong>B.</strong> 12 months</span>
-</label><label class="option" data-q="127" data-i="2">
-<input type="radio" name="q127" value="2">
-<span><strong>C.</strong> 60 days</span>
-</label><label class="option" data-q="127" data-i="3">
-<input type="radio" name="q127" value="3">
-<span><strong>D.</strong> 45 days</span>
-</label>
-<div class="feedback" id="fb-127"></div>
-</section><section class="card" id="card-128">
-<div class="qtitle">128. What are the two standard certification events for shore-activity CRTT?</div>
-
-<label class="option" data-q="128" data-i="0">
-<input type="radio" name="q128" value="0">
-<span><strong>A.</strong> ULTRA-Certification and ULTRA-Suitability</span>
-</label><label class="option" data-q="128" data-i="1">
-<input type="radio" name="q128" value="1">
-<span><strong>B.</strong> ULTRA-Classification and ULTRA-Suitability</span>
-</label><label class="option" data-q="128" data-i="2">
-<input type="radio" name="q128" value="2">
-<span><strong>C.</strong> ULTRA-Certification and ULTRA-Sustainment</span>
-</label><label class="option" data-q="128" data-i="3">
-<input type="radio" name="q128" value="3">
-<span><strong>D.</strong> ULTRA-Classification and ULTRA-Sustainment</span>
-</label>
-<div class="feedback" id="fb-128"></div>
-</section><section class="card" id="card-129">
-<div class="qtitle">129. TRUE/FALSE: The primary purpose of ULTRA-C is to validate an activity’s training-pillar proficiency.</div>
-
-<label class="option" data-q="129" data-i="0">
-<input type="radio" name="q129" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="129" data-i="1">
-<input type="radio" name="q129" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-129"></div>
-</section><section class="card" id="card-130">
-<div class="qtitle">130. Which of the following is used initially to validate an activity’s training-pillar proficiency during an ULTRA-C?</div>
-
-<label class="option" data-q="130" data-i="0">
-<input type="radio" name="q130" value="0">
-<span><strong>A.</strong> Validating existing strengths and identifying weaknesses in the CRTT</span>
-</label><label class="option" data-q="130" data-i="1">
-<input type="radio" name="q130" value="1">
-<span><strong>B.</strong> Evaluation of Command Briefing</span>
-</label><label class="option" data-q="130" data-i="2">
-<input type="radio" name="q130" value="2">
-<span><strong>C.</strong> Validate Mission Focus Areas</span>
-</label><label class="option" data-q="130" data-i="3">
-<input type="radio" name="q130" value="3">
-<span><strong>D.</strong> Perform training-pipeline evaluations for different missions assessed under CRTT</span>
-</label>
-<div class="feedback" id="fb-130"></div>
-</section><section class="card" id="card-131">
-<div class="qtitle">131. TRUE/FALSE: The completion of ULTRA events signifies the end of a unit-level evaluation process.</div>
-
-<label class="option" data-q="131" data-i="0">
-<input type="radio" name="q131" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="131" data-i="1">
-<input type="radio" name="q131" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-131"></div>
-</section><section class="card" id="card-132">
-<div class="qtitle">132. How often will an ULTRA-S event be conducted following initial certification?</div>
-
-<label class="option" data-q="132" data-i="0">
-<input type="radio" name="q132" value="0">
-<span><strong>A.</strong> 12 months</span>
-</label><label class="option" data-q="132" data-i="1">
-<input type="radio" name="q132" value="1">
-<span><strong>B.</strong> 24 months</span>
-</label><label class="option" data-q="132" data-i="2">
-<input type="radio" name="q132" value="2">
-<span><strong>C.</strong> 18 months</span>
-</label><label class="option" data-q="132" data-i="3">
-<input type="radio" name="q132" value="3">
-<span><strong>D.</strong> 6 months</span>
-</label>
-<div class="feedback" id="fb-132"></div>
-</section><section class="card" id="card-133">
-<div class="qtitle">133. Who is responsible for ensuring its deploying teams complete their Basic Phase requirements and embark in sufficient time to support certification of the host?</div>
-
-<label class="option" data-q="133" data-i="0">
-<input type="radio" name="q133" value="0">
-<span><strong>A.</strong> TYCOM</span>
-</label><label class="option" data-q="133" data-i="1">
-<input type="radio" name="q133" value="1">
-<span><strong>B.</strong> NAVIFOR</span>
-</label><label class="option" data-q="133" data-i="2">
-<input type="radio" name="q133" value="2">
-<span><strong>C.</strong> CNO</span>
-</label><label class="option" data-q="133" data-i="3">
-<input type="radio" name="q133" value="3">
-<span><strong>D.</strong> CO of the Platform</span>
-</label>
-<div class="feedback" id="fb-133"></div>
-</section><section class="card" id="card-134">
-<div class="qtitle">134. TRUE/FALSE: The purpose of ULTRA-S is to conduct a standardized assessment of certification areas, serving as an assessment or measurement event for designated proficiency levels and activity self-assessment skills.</div>
-
-<label class="option" data-q="134" data-i="0">
-<input type="radio" name="q134" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="134" data-i="1">
-<input type="radio" name="q134" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-134"></div>
-</section><section class="card" id="card-135">
-<div class="qtitle">135. All CCRs must be completed, or have an ISIC-approved plan in place to complete any incomplete CCR, within what time frame following an ULTRA-C for all assigned capability areas?</div>
-
-<label class="option" data-q="135" data-i="0">
-<input type="radio" name="q135" value="0">
-<span><strong>A.</strong> 6 months</span>
-</label><label class="option" data-q="135" data-i="1">
-<input type="radio" name="q135" value="1">
-<span><strong>B.</strong> 6 weeks</span>
-</label><label class="option" data-q="135" data-i="2">
-<input type="radio" name="q135" value="2">
-<span><strong>C.</strong> 12 months</span>
-</label><label class="option" data-q="135" data-i="3">
-<input type="radio" name="q135" value="3">
-<span><strong>D.</strong> 7 days</span>
-</label>
-<div class="feedback" id="fb-135"></div>
-</section><section class="card" id="card-136">
-<div class="qtitle">136. Cryptologic Direct Support Elements will follow operator-qualification guidance in the NAVIFOR Multi-Level Qualification Program following which program framework?</div>
-
-<label class="option" data-q="136" data-i="0">
-<input type="radio" name="q136" value="0">
-<span><strong>A.</strong> Air Combat Training Continuum</span>
-</label><label class="option" data-q="136" data-i="1">
-<input type="radio" name="q136" value="1">
-<span><strong>B.</strong> Surface Combat Training Continuum</span>
-</label><label class="option" data-q="136" data-i="2">
-<input type="radio" name="q136" value="2">
-<span><strong>C.</strong> Information Warfare Training Continuum</span>
-</label><label class="option" data-q="136" data-i="3">
-<input type="radio" name="q136" value="3">
-<span><strong>D.</strong> Subsurface Combat Training Continuum</span>
-</label>
-<div class="feedback" id="fb-136"></div>
-</section><section class="card" id="card-137">
-<div class="qtitle">137. What detachments is NAVIFOR authorized to conduct ULTRA-S on?</div>
-
-<label class="option" data-q="137" data-i="0">
-<input type="radio" name="q137" value="0">
-<span><strong>A.</strong> Detachments under Echelon 2 Commands</span>
-</label><label class="option" data-q="137" data-i="1">
-<input type="radio" name="q137" value="1">
-<span><strong>B.</strong> Detachments under Echelon 3 Commands</span>
-</label><label class="option" data-q="137" data-i="2">
-<input type="radio" name="q137" value="2">
-<span><strong>C.</strong> No detachments</span>
-</label><label class="option" data-q="137" data-i="3">
-<input type="radio" name="q137" value="3">
-<span><strong>D.</strong> Any detachments</span>
-</label>
-<div class="feedback" id="fb-137"></div>
-</section><section class="card" id="card-138">
-<div class="qtitle">138. Who is responsible for training, sustaining, and reporting of subordinate-command detachments?</div>
-
-<label class="option" data-q="138" data-i="0">
-<input type="radio" name="q138" value="0">
-<span><strong>A.</strong> Echelon 3 Commanding Officer</span>
-</label><label class="option" data-q="138" data-i="1">
-<input type="radio" name="q138" value="1">
-<span><strong>B.</strong> Echelon 3 Executive Officer</span>
-</label><label class="option" data-q="138" data-i="2">
-<input type="radio" name="q138" value="2">
-<span><strong>C.</strong> Detachments Command Master Chief</span>
-</label><label class="option" data-q="138" data-i="3">
-<input type="radio" name="q138" value="3">
-<span><strong>D.</strong> NAVIFOR</span>
-</label>
-<div class="feedback" id="fb-138"></div>
-</section><section class="card" id="card-139">
-<div class="qtitle">139. TRUE/FALSE: Self-assessments of each NMET shall only be conducted during regularly scheduled exercises.</div>
-
-<label class="option" data-q="139" data-i="0">
-<input type="radio" name="q139" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="139" data-i="1">
-<input type="radio" name="q139" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-139"></div>
-</section><section class="card" id="card-140">
-<div class="qtitle">140. What provides a detailed summary of the activity NMET assessment, including CCRs that were not able to be assessed during the event?</div>
-
-<label class="option" data-q="140" data-i="0">
-<input type="radio" name="q140" value="0">
-<span><strong>A.</strong> Sustainment Reporting</span>
-</label><label class="option" data-q="140" data-i="1">
-<input type="radio" name="q140" value="1">
-<span><strong>B.</strong> Certification Reporting</span>
-</label><label class="option" data-q="140" data-i="2">
-<input type="radio" name="q140" value="2">
-<span><strong>C.</strong> Command Reporting</span>
-</label><label class="option" data-q="140" data-i="3">
-<input type="radio" name="q140" value="3">
-<span><strong>D.</strong> NAVIFOR Reporting</span>
-</label>
-<div class="feedback" id="fb-140"></div>
-</section><section class="card" id="card-141">
-<div class="qtitle">141. TRUE/FALSE: A CRTT certification-event preparatory meeting should be held by the activity 1–3 months prior to ULTRA-C/S.</div>
-
-<label class="option" data-q="141" data-i="0">
-<input type="radio" name="q141" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="141" data-i="1">
-<input type="radio" name="q141" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-141"></div>
-</section><section class="card" id="card-142">
-<div class="qtitle">142. An activity will attain certification when all of the ______ are met from the applicable certification appendices and the activity is GREEN in each respective capability area.</div>
-
-<label class="option" data-q="142" data-i="0">
-<input type="radio" name="q142" value="0">
-<span><strong>A.</strong> UXPs</span>
-</label><label class="option" data-q="142" data-i="1">
-<input type="radio" name="q142" value="1">
-<span><strong>B.</strong> CCRs</span>
-</label><label class="option" data-q="142" data-i="2">
-<input type="radio" name="q142" value="2">
-<span><strong>C.</strong> TTPs</span>
-</label><label class="option" data-q="142" data-i="3">
-<input type="radio" name="q142" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-142"></div>
-</section><section class="card" id="card-143">
-<div class="qtitle">143. Who is responsible for scheduling and conducting the ULTRA?</div>
-
-<label class="option" data-q="143" data-i="0">
-<input type="radio" name="q143" value="0">
-<span><strong>A.</strong> CO and XO</span>
-</label><label class="option" data-q="143" data-i="1">
-<input type="radio" name="q143" value="1">
-<span><strong>B.</strong> Unit-level CRTT</span>
-</label><label class="option" data-q="143" data-i="2">
-<input type="radio" name="q143" value="2">
-<span><strong>C.</strong> RTAAG</span>
-</label><label class="option" data-q="143" data-i="3">
-<input type="radio" name="q143" value="3">
-<span><strong>D.</strong> 10th Fleet</span>
-</label>
-<div class="feedback" id="fb-143"></div>
-</section><section class="card" id="card-144">
-<div class="qtitle">144. NAVIFOR will reassess any capability area considered not effective, and any unmet requirements, within how many days?</div>
-
-<label class="option" data-q="144" data-i="0">
-<input type="radio" name="q144" value="0">
-<span><strong>A.</strong> 365</span>
-</label><label class="option" data-q="144" data-i="1">
-<input type="radio" name="q144" value="1">
-<span><strong>B.</strong> 180</span>
-</label><label class="option" data-q="144" data-i="2">
-<input type="radio" name="q144" value="2">
-<span><strong>C.</strong> 90</span>
-</label><label class="option" data-q="144" data-i="3">
-<input type="radio" name="q144" value="3">
-<span><strong>D.</strong> 10</span>
-</label>
-<div class="feedback" id="fb-144"></div>
-</section><section class="card" id="card-145">
-<div class="qtitle">145. TRUE/FALSE: If any assessed capability area does not meet the ±10 criteria, the capability is considered not effective.</div>
-
-<label class="option" data-q="145" data-i="0">
-<input type="radio" name="q145" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="145" data-i="1">
-<input type="radio" name="q145" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-145"></div>
-</section><section class="card" id="card-146">
-<div class="qtitle">146. NAVIFOR shore activities will typically conduct an ULTRA-C how many months following NWTP implementation?</div>
-
-<label class="option" data-q="146" data-i="0">
-<input type="radio" name="q146" value="0">
-<span><strong>A.</strong> 24</span>
-</label><label class="option" data-q="146" data-i="1">
-<input type="radio" name="q146" value="1">
-<span><strong>B.</strong> 12</span>
-</label><label class="option" data-q="146" data-i="2">
-<input type="radio" name="q146" value="2">
-<span><strong>C.</strong> 6</span>
-</label><label class="option" data-q="146" data-i="3">
-<input type="radio" name="q146" value="3">
-<span><strong>D.</strong> 2</span>
-</label>
-<div class="feedback" id="fb-146"></div>
-</section><section class="card" id="card-147">
-<div class="qtitle">147. Which of the following will be administered to CRTT management and designated CRTT members in conjunction with the ULTRA event?</div>
-
-<label class="option" data-q="147" data-i="0">
-<input type="radio" name="q147" value="0">
-<span><strong>A.</strong> Badges</span>
-</label><label class="option" data-q="147" data-i="1">
-<input type="radio" name="q147" value="1">
-<span><strong>B.</strong> LOK Exams</span>
-</label><label class="option" data-q="147" data-i="2">
-<input type="radio" name="q147" value="2">
-<span><strong>C.</strong> Awards</span>
-</label><label class="option" data-q="147" data-i="3">
-<input type="radio" name="q147" value="3">
-<span><strong>D.</strong> All of the above</span>
-</label>
-<div class="feedback" id="fb-147"></div>
-</section><section class="card" id="card-148">
-<div class="qtitle">148. TRUE/FALSE: Eighteen months prior to the ULTRA event, NAVIFOR will release an ULTRA-C/S message to the command containing all requirements to conduct the ULTRA-C/S.</div>
-
-<label class="option" data-q="148" data-i="0">
-<input type="radio" name="q148" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="148" data-i="1">
-<input type="radio" name="q148" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-148"></div>
-</section><section class="card" id="card-149">
-<div class="qtitle">149. Which of the following is NOT part of the process used to determine ULTRA-C/S results?</div>
-
-<label class="option" data-q="149" data-i="0">
-<input type="radio" name="q149" value="0">
-<span><strong>A.</strong> RTAAG assessors observe and record CRTT performance using appropriate UXPs</span>
-</label><label class="option" data-q="149" data-i="1">
-<input type="radio" name="q149" value="1">
-<span><strong>B.</strong> The activity’s CRTT evaluators observe and record capability performance using appropriate UXPs; resultant proficiency is compared with the RTAAG proficiency score</span>
-</label><label class="option" data-q="149" data-i="2">
-<input type="radio" name="q149" value="2">
-<span><strong>C.</strong> CRTT formulates personal work-role achievements and attaches them to the appropriate UXP</span>
-</label><label class="option" data-q="149" data-i="3">
-<input type="radio" name="q149" value="3">
-<span><strong>D.</strong> RTAAG identifies deficiencies and unmet CCRs, provides a corrective plan, and identifies remedial training during post-assessment</span>
-</label>
-<div class="feedback" id="fb-149"></div>
-</section><section class="card" id="card-150">
-<div class="qtitle">150. TRUE/FALSE: A command CRTT must achieve an average passing score of 80% on the LOK exams during an ULTRA.</div>
-
-<label class="option" data-q="150" data-i="0">
-<input type="radio" name="q150" value="0">
-<span><strong>A.</strong> True</span>
-</label><label class="option" data-q="150" data-i="1">
-<input type="radio" name="q150" value="1">
-<span><strong>B.</strong> False</span>
-</label>
-<div class="feedback" id="fb-150"></div>
-</section>
-</main>
-
 <script>
-var ANSWERS = {"1": [1], "2": [2], "3": [3], "4": [0], "5": [1], "6": [1], "7": [3], "8": [0], "9": [0], "10": [1], "11": [2], "12": [0], "13": [0], "14": [3], "15": [2], "16": [3], "17": [0], "18": [2], "19": [3], "20": [1], "21": [0], "22": [2], "23": [3], "24": [1], "25": [0], "26": [1], "27": [2], "28": [3], "29": [0], "30": [0], "31": [2], "32": [0], "33": [1], "34": [0], "35": [2], "36": [3], "37": [1], "38": [0], "39": [1], "40": [1], "41": [1], "42": [2], "43": [2], "44": [0], "45": [1], "46": [0], "47": [1], "48": [1], "49": [0], "50": [2], "51": [0], "52": [3], "53": [2], "54": [0], "55": [3], "56": [0], "57": [3], "58": [0], "59": [0], "60": [2], "61": [0], "62": [2], "63": [0], "64": [1], "65": [1], "66": [2], "67": [2], "68": [1], "69": [2], "70": [0], "71": [2], "72": [1], "73": [0], "74": [0], "75": [3], "76": [1], "77": [2], "78": [0], "79": [0], "80": [2], "81": [3], "82": [0], "83": [0], "84": [1], "85": [0], "86": [3], "87": [2], "88": [1], "89": [1], "90": [0], "91": [3], "92": [1], "93": [0], "94": [1], "95": [0], "96": [3], "97": [0], "98": [1], "99": [0, 1, 3], "100": [2], "101": [3], "102": [3], "103": [0], "104": [0], "105": [2], "106": [2], "107": [1], "108": [0], "109": [0], "110": [3], "111": [2], "112": [3], "113": [0], "114": [1], "115": [2], "116": [0], "117": [2], "118": [1], "119": [1], "120": [0], "121": [2], "122": [1], "123": [3], "124": [0], "125": [1], "126": [3], "127": [0], "128": [2], "129": [0], "130": [0], "131": [1], "132": [1], "133": [1], "134": [0], "135": [1], "136": [0], "137": [1], "138": [0], "139": [1], "140": [1], "141": [0], "142": [1], "143": [2], "144": [2], "145": [0], "146": [2], "147": [1], "148": [1], "149": [2], "150": [0]};
-var QUESTION_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150];
-var missed = [];
+const BANK = [{"sec":"I. CMF Training Model","s":"United States Cyber Command defines the CMF training model in how many phases?","o":["Three","Four","Six","Five"],"a":1,"cite":"App F, para 101.1.a."},{"sec":"I. CMF Training Model","s":"Collective training built upon 1000- and 2000-level tasks, captured in NWTPs as part of NWTS execution, is which level?","o":["2000 Level","3000 Level","4000 Level","5000 Level"],"a":1,"cite":"App F, para 101.1.a(3)."},{"sec":"I. CMF Training Model","s":"Which CMF training level consists of service-specific individual training awarding a Navy rating and/or NEC code?","o":["1000 Level","2000 Level","3000 Level","4000 Level"],"a":0,"cite":"App F, para 101.1.a(1)."},{"sec":"I. CMF Training Model","s":"Which ratings' A schools are identified in Appendix F as satisfying Navy enlisted 1000-level training?","o":["CTR, CTM, CTT, IS, and ET","CTI, CTR, CTT, IS, and IT","CWT, CTN, CTI, IT, and OS","CWT, CTR, CTI, IS, and IT"],"a":3,"cite":"App F, para 101.1.a(1)."},{"sec":"I. CMF Training Model","s":"Appendix F cites CTR C08A as an example of what?","o":["A 2000-level work role pipeline course","A service-specific NEC serving as a CMF billet requirement and prerequisite for CMF work role training","A PCTE range engineer qualification","A joint certification standard"],"a":1,"cite":"App F, para 101.1.a(1)."},{"sec":"I. CMF Training Model","s":"USCC CMF work role training pipeline courses, in many cases also NEC-awarding, fall under which level?","o":["1000 Level","2000 Level","3000 Level","4000 Level"],"a":1,"cite":"App F, para 101.1.a(2)."},{"sec":"I. CMF Training Model","s":"Per Appendix F, where else can 2000-level training be conducted?","o":["Only aboard afloat units during the Basic Phase","At the unit level as individual or basic level collective training","Only at NCU and ORC","Only during CYBER FLAG"],"a":1,"cite":"App F, para 101.1.a(2)."},{"sec":"I. CMF Training Model","s":"Why is CMF training and readiness captured in a separate appendix?","o":["Because CMF teams do not report readiness in DRRS","Because CMF training is classified above the level of this manual","Because of the joint nature and fluidity of CMF requirements, training solutions outside Navy life-lines, and alignment to both joint and service requirements","Because CMF teams are not under NAVIFOR ADCON"],"a":2,"cite":"App F, para 101.1. The appendix is updated and distributed to CMF leadership as requirements, solutions, and policies evolve."},{"sec":"I. CMF Training Model","s":"Successful accomplishment of a 3000-level evaluation validates what?","o":["An individual's work role qualification","A range engineer's content author access","A command's material readiness","A team's ability to perform all necessary tactical-to-operational mission sets"],"a":3,"cite":"App F, para 101.1.a(3)."},{"sec":"I. CMF Training Model","s":"Team level certification events focus on tasks at which level?","o":["1000 Level","2000 Level","3000 Level","4000 Level"],"a":2,"cite":"App F, para 101.1.a(3)."},{"sec":"I. CMF Training Model","s":"Collective training and evaluation based on higher headquarters-level certification, occurring during major exercises such as CYBER FLAG, is which level?","o":["4000 Level","3000 Level","Capstone Level","2000 Level"],"a":0,"cite":"App F, para 101.1.a(4)."},{"sec":"I. CMF Training Model","s":"Per Appendix F, standards and tasks for 3000-level collective training are documented in which two products?","o":["PQS and OCCSTDs","JCT&CS and JQRs","NMETLs and CST-01 check sheets","USCC T&EO sheets and Navy UXPs"],"a":3,"cite":"App F, para 101.1.a(3)."},{"sec":"I. CMF Training Model","s":"USCC 2000-level training requirements are satisfied using a mixture of courses from which providers?","o":["NETC, ATRRS, CANTRAC, and ENTRS","NSA, CSS, CTC, and CTAG","CIWT, NIWDC, NIWTG, and NETC","TSD, NCU, ORC, and DC3 Cyber Training Academy"],"a":3,"cite":"App F, para 101.1.b. These courses satisfy mandated compliance and access requirements to operate within the current CMF/cyberspace infrastructure."},{"sec":"I. CMF Training Model","s":"Per Appendix F, collective unit level (3000-level) training and assessment programs are critical to establishing what?","o":["Individual work role certification","Joint curriculum lead authority","Cyclic performance based training, sets and reps in virtualized or simulated environments, and quantifiable measurement of performance","Detailer-controlled course quotas"],"a":2,"cite":"App F, para 101.1.c."},{"sec":"I. CMF Training Model","s":"Team certification is executed by whom, and validates what?","o":["The ADCON command; validates individual qualifications","USCC J72; validates pipeline course completion","Higher echelon; validates the capability of CMF Teams to perform to standards aligned to METs","NAVIFOR RTAAG; validates the CRTT program"],"a":2,"cite":"App F, para 101.1.e. Certification programs deliver confidence in force presentation to Operational Commanders."},{"sec":"II. Roles and Responsibilities","s":"Which command establishes joint training requirements for CMF through development of the Joint Cyber Training and Certification Standards?","o":["USCC","NAVIFOR","Fleet Cyber Command","CIWT"],"a":0,"cite":"App F, para 102.a. USCC also validates 2000-level training solutions aligned to JCT&CS."},{"sec":"II. Roles and Responsibilities","s":"Which command develops and maintains Joint METs and evaluation tasks and standards for 3000- and 4000-level collective training?","o":["NAVIFOR","FCC","NIWDC","USCC"],"a":3,"cite":"App F, para 102.a."},{"sec":"II. Roles and Responsibilities","s":"Which command is the Navy's Cyber Component Commander, responsible to USCC for Navy CMF readiness and force presentation?","o":["NIWDC","NAVIFOR","Fleet Cyber Command","NAVNETWARCOM"],"a":2,"cite":"App F, para 102.b."},{"sec":"II. Roles and Responsibilities","s":"FCC serves as the Certifying Authority for Navy resourced teams with which exception?","o":["CNMF and DODIN-aligned teams","DODIN-aligned teams only","CNMF teams only","There are no exceptions"],"a":0,"cite":"App F, para 102.b."},{"sec":"II. Roles and Responsibilities","s":"The Navy's PCTE Command Trusted Agent position resides in which FCC staff code?","o":["N3","N9","N73","N7"],"a":1,"cite":"App F, para 102.b."},{"sec":"II. Roles and Responsibilities","s":"As the Information Warfare TYCOM, NAVIFOR is responsible to which command for manning, training, equipping, and certifying IW Forces?","o":["USFF","OPNAV N2/N6","USCC","FCC"],"a":0,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"As the Navy's Service Training Lead for CMF pipeline courses, NAVIFOR submits annual and emerging pipeline training requirements to which two organizations?","o":["NCU and DC3 Cyber Training Academy","NETC and NIWDC","NSA and CIWT","USCC and FCC"],"a":2,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"NAVIFOR conducts quota control for which courses?","o":["National Cryptologic University and DCTA courses","All CIWT A and C school courses","All ORC courses","NIWDC advanced TTP courses"],"a":0,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"NAVIFOR develops and maintains which agreements for other-service delivered CMF courses?","o":["Memoranda of Understanding with NSA","Joint Curriculum Lead charters","Inter-service Training Resourcing Organization agreements","Executive Agent agreements"],"a":2,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"Which command certifies Command Readiness Training Teams to self-train and self-assess during ULTRA?","o":["The ISIC","NAVIFOR","FCC","USCC"],"a":1,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"FCC has designated which command as the CMF certification executive agent for Navy resourced teams, less CNMF and DODIN?","o":["NIWTG","C10F","USFF","NAVIFOR"],"a":3,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"Which set of systems does NAVIFOR use to track individual and unit level training for CMF?","o":["ESORTS, NRRE, TORIS, and CDMDOA","DRRS-S, SORTS, FLTMPS, NRAS, and NTIMS","CANTRAC, ATRRS, ENTRS, and FLTMPS","JCC2-R, PCTE, JIOR, and NCR"],"a":1,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"NAVIFOR serves as the Navy's PCTE platform manager, responsible for which functions?","o":["Range accreditation and threat portrayal","Service level licensing, content development, account management, and PCTE resource coordination","Joint curriculum development and JCT&CS validation","Certifying authority for CNMF teams"],"a":1,"cite":"App F, para 102.c."},{"sec":"II. Roles and Responsibilities","s":"Commanding Officers of ADCON commands with assigned CMF teams are responsible for what?","o":["Approving annual certification schedules","Awarding CMF team certification","The readiness of forces presented to CMF operational commanders","Developing joint training standards"],"a":2,"cite":"App F, para 102.d."},{"sec":"II. Roles and Responsibilities","s":"Per the Navy SORM as cited in Appendix F, who is overall responsible for the command's training programs?","o":["The Training Officer","The Operations Officer","The Executive Officer","The Commanding Officer"],"a":2,"cite":"App F, para 102.d."},{"sec":"II. Roles and Responsibilities","s":"ADCON command leadership is required to integrate CMF training into what?","o":["The command's Planning Board for Training","The USCC Joint Training Plan","The ISIC's readiness brief","The unit's Long-Range Training Plan only"],"a":0,"cite":"App F, para 102.d."},{"sec":"II. Roles and Responsibilities","s":"At ADCON commands, who is responsible for the CRTT program supporting unit level training and performance-based readiness reporting?","o":["The Commanding Officer","The Training Officer","The Executive Officer","The Site Training Lead"],"a":2,"cite":"App F, para 102.d. Consistent with Ch 2, para 204 and App G, para 103.3.b."},{"sec":"II. Roles and Responsibilities","s":"Site Training Leads assist team leadership with course scheduling by utilizing what?","o":["The CMF Master Schedule","CANTRAC","The PCTE event calendar","ENTRS"],"a":0,"cite":"App F, para 102.e."},{"sec":"II. Roles and Responsibilities","s":"Which position must each command with CMF assigned provide to represent CMF PCTE equities at team level with FCC and NAVIFOR?","o":["Site Training Lead","Command Trusted Agent","Certified Range Engineer","Local Trusted Agent"],"a":3,"cite":"App F, para 102.f."},{"sec":"II. Roles and Responsibilities","s":"Which of the following is a PCTE Local Trusted Agent responsibility?","o":["Approving joint curriculum for CMF work roles","Validating 2000-level training solutions","De-activating accounts when a user no longer requires access","Awarding CMF team certification"],"a":2,"cite":"App F, para 105.2.c. LTA duties also include allocating resources, submitting new user requests, modifying organizational structure and users, ensuring correct roles, assisting with JIRA tickets, and maintaining content in the FCC content catalog."},{"sec":"II. Roles and Responsibilities","s":"Who is directly responsible for training their Sailors within a CMF team?","o":["The CRTT and CQTT","The Commander, Team Lead, NCOIC, and Ops Officer","The Site Training Lead and PCTE LTA","NAVIFOR RTAAG"],"a":1,"cite":"App F, para 102.g(1)."},{"sec":"II. Roles and Responsibilities","s":"What does Appendix F say about the role of CRTT and CQTT relative to CMF Team Leadership?","o":["They replace the Ops Officer in the training chain","They assume responsibility for team training","They report directly to USCC on team readiness","They augment and facilitate the process, but ultimate responsibility remains with CMF Team Leadership"],"a":3,"cite":"App F, para 102.g(1)."},{"sec":"II. Roles and Responsibilities","s":"Beyond NTIMS and DRRS-S, in which system must CMF Commanders and Team Leads ensure accurate and timely readiness reporting?","o":["JCC2-R","ESORTS","NRAS","FLTMPS"],"a":0,"cite":"App F, para 102.g(2)."},{"sec":"II. Roles and Responsibilities","s":"Who is responsible for completing all NSA course prerequisites, required accounts, and attendance?","o":["The command TRAINO","The student","The Team Lead","The Site Training Lead"],"a":1,"cite":"App F, para 102.h."},{"sec":"II. Roles and Responsibilities","s":"Per Chapter 2, which command plans and manages delivery of Cyber Qualification Training Cycles to CMF Teams globally?","o":["NAVIFOR","NIWTG","USCC","FCC"],"a":0,"cite":"Ch 2, para 200.10."},{"sec":"II. Roles and Responsibilities","s":"Which organization serves as COMNAVIFOR's executive agent for OFRP Basic Phase IW mission area training and assessment, including the CYBER mission area?","o":["NIWDC","RTAAG","CNIWTG","CIWT"],"a":2,"cite":"Ch 2, para 202."},{"sec":"II. Roles and Responsibilities","s":"Which organization serves as COMNAVIFOR's executive training agent for Advanced IW mission area training and assessment?","o":["NIWDC","CIWT","NIWTG","NCDOC"],"a":0,"cite":"Ch 2, para 203."},{"sec":"II. Roles and Responsibilities","s":"Per Appendix G, the RTAAG is best described as what?","o":["A joint certification authority under USCC","A subordinate command of Fleet Cyber Command","An NETC learning center","A NAVIFOR supporting element acting as the process integrator for staffing, maintenance, modernization, and exercise functions"],"a":3,"cite":"App G, para 103.1."},{"sec":"II. Roles and Responsibilities","s":"Which RTAAG function directly enables a command to report its own readiness?","o":["Developing IW tactics, techniques, and procedures","Managing detailer-controlled course quotas","Awarding NEC codes","Certifying subordinate commands' CRTT ability to self-evaluate command performance and report readiness"],"a":3,"cite":"App G, para 103.1.b."},{"sec":"II. Roles and Responsibilities","s":"Per Chapter 2, which document must the command TRAINO maintain regarding CRTT manning continuity?","o":["The battle roster","The NWTP periodicity matrix","A CRTT Command Qualifier and Replacement List","The Master Exercise Package file"],"a":2,"cite":"Ch 2, para 205.1.k."},{"sec":"III. Certification and Periodicity","s":"Per Appendix F, CRTT and CQTT must successfully complete an ULTRA at what interval to be certified to train and assess CMF teams?","o":["Every 18 months","Annually","Every 36 months","Biennially"],"a":3,"cite":"App F, para 103. NOTE: Ch 1, para 107.2 and App G, para 107.d state different intervals for shore commands. See the conflict note at the end of this review."},{"sec":"III. Certification and Periodicity","s":"Per Appendix F para 103, ULTRA will be conducted utilizing which check sheets?","o":["ULTRA Check Sheet (UCS)","CCR check sheets","CSRAT check sheets","CST-01 check sheets"],"a":3,"cite":"App F, para 103. App G, para 107.d(2) separately directs that ULTRA be graded using the UCS."},{"sec":"III. Certification and Periodicity","s":"An ULTRA certification is an evaluation of what?","o":["Individual work role proficiency","The CMF team's operational performance","The command's material readiness posture","A training team's ability to develop, execute, and assess a training and evaluation event"],"a":3,"cite":"App F, para 103, which states explicitly that it is not an assessment of a CMF team's performance."},{"sec":"III. Certification and Periodicity","s":"In accordance with USCCI 1200-07 as cited in Appendix F, CMF teams operationally certify at what interval via external assessment?","o":["Biennially","Annually","Every 36 months","Every 30 months"],"a":0,"cite":"App F, para 103."},{"sec":"III. Certification and Periodicity","s":"CMF team external operational certification is based on tasks and standards detailed in what?","o":["The UCS and command SOP","USCC T&EO sheets and the team UXP","JCT&CS and the DCWF","The NMETL and LRTP"],"a":1,"cite":"App F, para 103."},{"sec":"III. Certification and Periodicity","s":"Who develops, and who approves, annual CMF certification schedules?","o":["FCC develops; NAVIFOR approves","NAVIFOR develops; FCC approves","USCC develops; FCC approves","NAVIFOR develops; USCC approves"],"a":1,"cite":"App F, para 103."},{"sec":"III. Certification and Periodicity","s":"Ideally, CMF team certification will occur as a capstone event to what?","o":["A CYBER FLAG exercise","A CQTC","An ULTRA","A Program Review"],"a":1,"cite":"App F, para 103."},{"sec":"III. Certification and Periodicity","s":"Per Chapter 1, ULTRA certification events for NAVIFOR operational shore commands are conducted at what interval, with sustainment checks at what point?","o":["Every 36 months, with no sustainment checks","Every 2 years, with 12-month sustainment checks","Every 3 years, with 18-month sustainment checks","Annually, with 6-month sustainment checks"],"a":2,"cite":"Ch 1, para 107.2; restated at App A, para 101.4.a."},{"sec":"III. Certification and Periodicity","s":"Which command remains on a 2-year ULTRA periodicity with a 12-month sustainment check due to tour length and personnel turnover?","o":["NCTS Naples","NCTS Far East","NCTS Sicily","NCTS Bahrain"],"a":3,"cite":"Ch 1, para 107.2 (NOTE); repeated at App A, para 101.4.a."},{"sec":"III. Certification and Periodicity","s":"Per Chapter 1, a Navy CMF Team mission area certification is awarded by NAVIFOR in conjunction with which command, and how often?","o":["USCC, annually","FCC, every two years","C10F, every 18 months","USFF, every three years"],"a":1,"cite":"Ch 1, para 107.4, in accordance with U.S. Fleet Forces Command and U.S. Cyber Command directives."},{"sec":"III. Certification and Periodicity","s":"Per Appendix G, NAVIFOR shore activities typically conduct an ULTRA how long after NWTP implementation?","o":["3 months","6 months","12 months","18 months"],"a":1,"cite":"App G, para 107.d."},{"sec":"III. Certification and Periodicity","s":"Per Appendix G, a sustainment event or ULTRA occurs at what interval following initial certification?","o":["Every 36 months","Every 18 months","Every 48 months","Every 24 months"],"a":0,"cite":"App G, para 107.d."},{"sec":"III. Certification and Periodicity","s":"How far in advance of an ULTRA does NAVIFOR release the ULTRA announcement message containing all requirements to conduct the ULTRA?","o":["Six months","One month","Three months","Two months"],"a":2,"cite":"App G, para 107.d(1); also para 103.2.c(1), which pairs this with an ADMIN review per the UCS."},{"sec":"III. Certification and Periodicity","s":"A CRTT certification event preparatory meeting should be held by the activity how far in advance of an ULTRA?","o":["1 to 3 months prior","2 weeks prior","3 to 6 months prior","6 to 12 months prior"],"a":0,"cite":"App G, para 107.c. The meeting should be as exclusive an event as possible, with full CRTT attendance."},{"sec":"III. Certification and Periodicity","s":"What score must the command achieve on the LOK exam, both individually and as a team average, during an ULTRA?","o":["70%","75%","80%","90%"],"a":2,"cite":"App G, para 107.1.b."},{"sec":"III. Certification and Periodicity","s":"When are LOK exams normally proctored during an ULTRA, and when are results presented?","o":["Continuously throughout; results posted to NTIMS","Prior to arrival; results presented at the in brief","Day one; results presented during the out brief","The final day; results presented by message"],"a":2,"cite":"App G, para 107.1.b."},{"sec":"III. Certification and Periodicity","s":"If a CRTT member fails the LOK exam a second time, what is required?","o":["The member is removed from the CRTT","A retest within 30 days of RTAAG departure","Automatic ULTRA failure","The command must provide a remediation plan to the RTAAG Leader"],"a":3,"cite":"App G, para 107.1.b. After a first failure, on-site remediation and a retest occur prior to RTAAG departure."},{"sec":"III. Certification and Periodicity","s":"Following an ULTRA Provisional Pass, within what period must specific items be addressed and completed, and with whose approval?","o":["14 days, with ISIC approval","30 days, with RTAAG Leader approval","60 days, with NAVIFOR N7 approval","90 days, with NAVIFOR N7 approval"],"a":2,"cite":"App G, para 107, ULTRA Provisional Pass. Otherwise an ULTRA Failure message will be issued."},{"sec":"III. Certification and Periodicity","s":"After an ULTRA failure, within what period must the CRTT Leader deliver a POA&M to NAVIFOR N7?","o":["Two weeks","30 days","One week","60 days"],"a":0,"cite":"App G, para 107, ULTRA Failure."},{"sec":"III. Certification and Periodicity","s":"Following approval of a post-failure POA&M, the next ULTRA will be scheduled within what period?","o":["30 days","60 days","90 days","120 days"],"a":2,"cite":"App G, para 107, ULTRA Failure. After 90 days the command will receive another ULTRA, and all requirements are expected to be met, including the LOK."},{"sec":"III. Certification and Periodicity","s":"Per the minimum POA&M content required after an ULTRA failure, what is the POA&M due date?","o":["30 days from receipt of the AAR","The last day of the ULTRA","Two weeks from the out brief","One week from the last day of the ULTRA, or the following Monday"],"a":3,"cite":"App G, para 107.3.a(1)vi. The POA&M date itself is the date of the last day of the ULTRA."},{"sec":"III. Certification and Periodicity","s":"How often must the CRTT Leader provide a POA&M status update to NAVIFOR N7 following an ULTRA failure?","o":["Only upon completion","Quarterly","Monthly","Weekly"],"a":2,"cite":"App G, para 107.3.a(2)."},{"sec":"III. Certification and Periodicity","s":"An XO/OIC Program Assist is mandatory at what point?","o":["Six months prior to an ULTRA","Only upon command request","Annually","Three months after an XO/AOIC turnover"],"a":3,"cite":"App G, para 103.2.a(1). It provides a program overview and review in support of CRTT Leader turnover."},{"sec":"III. Certification and Periodicity","s":"When is a Program Review scheduled and conducted?","o":["In off years from the ULTRA schedule","Only after an ULTRA failure","Concurrent with the ULTRA","Every six months"],"a":0,"cite":"App G, para 103.2.b(1). A PR is also performed when NAVIFOR has program sustainment concerns."},{"sec":"IV. Individual Training","s":"NCU courses used to satisfy USCC and NSA/CSS requirements within Cyberspace Analyst work roles come from which two colleges?","o":["A21 and A22","A23 and A24","A22 and A23","A24 and A25"],"a":1,"cite":"App F, para 104.1.c."},{"sec":"IV. Individual Training","s":"In the acronym list, A23 designates which NCU college?","o":["College of Leadership","College of Language","College of Cryptology","College of Cyber"],"a":3,"cite":"App J. A24 is the College of Cryptology."},{"sec":"IV. Individual Training","s":"Which work roles are identified in Appendix F as Cyberspace Analyst work roles supported by NCU courses?","o":["Interactive ON-NET Operator and Exploitation Analyst only","Combat Mission Team Lead and Cyber Protection Team Lead","Digital Network Exploitation Analyst, Target Digital Network Analyst, Target Analyst Reporter, and Language Analyst","Cyber Defense Analyst, Network Administrator, and Range Engineer"],"a":2,"cite":"App F, para 104.1.c. NCU courses also supplement ORC courses within the Exploitation Analyst work role."},{"sec":"IV. Individual Training","s":"ORC provides CNO-specific training and enforces minimum qualifications for which high-risk work roles?","o":["Target Analyst Reporter and Language Analyst","Cyberspace Operator/ION Operator and Exploitation Analyst","Certified Range Engineer and Content Developer","Cyber Defense Analyst and Network Administrator"],"a":1,"cite":"App F, para 104.1.d."},{"sec":"IV. Individual Training","s":"Student attendance in ORC courses is controlled by whom?","o":["USCC J72","The Service member's detailer, in coordination with the ION/EA Program Manager at NAVIFOR","The Site Training Lead","NAVIFOR N7"],"a":1,"cite":"App F, para 104.1.d. Attendance is accomplished pre-assignment to the Permanent Duty Station."},{"sec":"IV. Individual Training","s":"Successful completion of which course is required for CQTT personnel?","o":["CRE-B","COPC","EMSOC","CRE-A"],"a":0,"cite":"App F, para 104.1.f. CRE-B is not mandatory for other content developers at this time but is preferred for any PCTE user developing content."},{"sec":"IV. Individual Training","s":"How are PCTE Certified Range Engineer requests handled?","o":["Routed through NAVIFOR and prioritized before inclusion in the final class roster","Assigned by the detailer","Approved by the local PCTE LTA","Submitted directly to JCTE"],"a":0,"cite":"App F, para 104.1.f."},{"sec":"IV. Individual Training","s":"Where is CMF work role pipeline training information located?","o":["The NAVIFOR Intelshare NIPR site","The USCC/J72/JCL NSAnet webpage","CANTRAC","ATRRS"],"a":1,"cite":"App F, para 104.1.e."},{"sec":"IV. Individual Training","s":"Service school course quotas for CMF individual training are controlled by whom?","o":["The detailer","The gaining command","NETC learning centers","NAVIFOR quota control"],"a":0,"cite":"App F, para 104.1.b. Course information can be found in systems such as CANTRAC and ATRRS, but all quotas are detailer-controlled."},{"sec":"IV. Individual Training","s":"Navy cyber service members should have Service school training delivered how?","o":["Via computer-based training in FLTMPS","Written into Permanent Change of Station orders, pre-assignment","After reporting to their permanent duty station","Through mobile training teams only"],"a":1,"cite":"App F, para 104.1.b. If orders arrive without it, the command should contact the detailer as soon as possible to request it be added."},{"sec":"IV. Individual Training","s":"The National Cryptologic University began as what?","o":["A NETC learning center","A DC3 Cyber Training Academy annex","The training school within NSA","A joint USCC schoolhouse"],"a":2,"cite":"App F, para 104.1.c. NCU has since expanded enrollment to include military and civilian personnel assigned to USCC."},{"sec":"IV. Individual Training","s":"Per Chapter 3, when no approved PQS exists, a JQR may be used with approval from whom?","o":["CIWT","NAVIFOR N7","The Commanding Officer","NETC"],"a":1,"cite":"Ch 3, para 302.5. JQR use shall be minimized and used only as a temporary substitute until formal PQS is developed."},{"sec":"V. CRTT and CQTT","s":"Per Appendix F, which team remains the current requirement for unit level training execution and performance-based readiness reporting for all Navy resourced CMF teams?","o":["CRTT","RTAAG","NIWTG","CQTT"],"a":0,"cite":"App F, para 105.1."},{"sec":"V. CRTT and CQTT","s":"What does Appendix F state about the future of the CRTT?","o":["CRTT will be disestablished upon publication of this manual","CRTT will be assumed by NAVIFOR RTAAG","CRTT and CQTT will merge into a single team","CQTT will eventually replace CRTT when fully operationally capable"],"a":3,"cite":"App F, para 105.1."},{"sec":"V. CRTT and CQTT","s":"Per Appendix F, details regarding the CQTT can be found in which instruction?","o":["COMNAVIFORINST 3500.4","COMNAVIFORINST 3502.1","USCCI 1200-07","COMNAVIFORINST 3120.1"],"a":0,"cite":"App F, para 105.1, the NAVIFOR CQTT Instruction. The manual cites 3500.4 as the location of CQTT details, not as the source of the CRTT-to-CQTT replacement direction."},{"sec":"V. CRTT and CQTT","s":"Per Appendix F, NWTP drills align to USCC T&EO sheets for which units, and to UXPs for which units?","o":["T&EO for CMF Teams; UXPs for non-CMF units","T&EO for DCO teams; UXPs for OCO teams","T&EO for afloat units; UXPs for shore units","T&EO for non-CMF units; UXPs for CMF Teams"],"a":0,"cite":"App F, para 105.1."},{"sec":"V. CRTT and CQTT","s":"Evaluation for critical CMF work roles will be conducted using all available live, virtual, or constructive assets, but primarily what?","o":["NCTE","JIOR","PCTE","NCR"],"a":2,"cite":"App F, para 105.1.a."},{"sec":"V. CRTT and CQTT","s":"What is the stated purpose of CQTTs?","o":["To manage PCTE accounts and range reservations","To deliver fully trained and qualified Sailors and mission-ready teams to CMF operational commanders","To develop joint training and certification standards","To assess CMF team operational performance for USCC"],"a":1,"cite":"App F, para 105.1.b. CQTTs augment CMF individual training and qualification pipelines and provide tailored, scenario-based ULT and assessments."},{"sec":"V. CRTT and CQTT","s":"3000-level training curricula and performance assessment content for Navy CMF individuals will be developed and delivered through what?","o":["An ULTRA","A Program Assist","A Cyber Qualification Training Cycle","A CYBER FLAG exercise"],"a":2,"cite":"App F, para 105.1.b, tailored to specific CMF teams' operational requirements."},{"sec":"V. CRTT and CQTT","s":"CQTT/CRTT exercises designed to evaluate METs identified in USCC T&EO sheets are evaluated by whom, and during what event?","o":["NAVIFOR RTAAG, during ULTRA events","NIWTG, during the Basic Phase","USCC, during CYBER FLAG","FCC, during operational certification"],"a":0,"cite":"App F, para 105.1.c."},{"sec":"V. CRTT and CQTT","s":"Relative to the CST-01, the exercise developed by a CQTT/CRTT is what?","o":["Assessed separately from the CST-01","An optional annex","A gradable section on the CST-01","Not assessed"],"a":2,"cite":"App F, para 105.1.c."},{"sec":"V. CRTT and CQTT","s":"How many members of a CQTT/CRTT are expected to have NTIMS access to provide scores from training and certification events?","o":["All designated members","Two","One","Three"],"a":1,"cite":"App F, para 105.1.d. Mirrored in App G, para 103.8, which sets the same two-person requirement for Readiness Officer access."},{"sec":"V. CRTT and CQTT","s":"Per Appendix G, who is the CRTT Leader?","o":["The Training Officer","The Commanding Officer","The CRTT Coordinator","The Executive Officer, Chief Staff Officer, or Assistant OIC"],"a":3,"cite":"App G, para 103.3.b."},{"sec":"V. CRTT and CQTT","s":"CRTT assigned personnel must have completed which Personnel Qualification Standard?","o":["NAVEDTRA 135D","NAVEDTRA 43100-1 Series","NAVEDTRA 130B","NAVEDTRA 43371 Series"],"a":3,"cite":"App G, para 103.3.a."},{"sec":"V. CRTT and CQTT","s":"What does Appendix G direct regarding CRTT team size?","o":["No specific team size is directed","Not fewer than half the watch team","One member per assigned UXP","A minimum of eight designated members"],"a":0,"cite":"App G, para 103.3.a. Size is influenced by unit size, number of qualified personnel, exercise complexity, and safety requirements."},{"sec":"VI. Exercise Design and Execution","s":"Per Appendix G, what scores are expected from a basic-level event?","o":["T-1 range","Mid-80s to low 90s","High T-3 to low T-2 range","Above 90% in all marking factors"],"a":2,"cite":"App G, para 105.9.a. Basic events suit newly formed watch teams or a majority of new CRTT members on their first set of events."},{"sec":"VI. Exercise Design and Execution","s":"Per Appendix G, what scores are expected from an advanced-level event?","o":["Above 95%","High T-3 to low T-2","Pass/fail only, no numeric score","Mid-80s to low 90s, with low 80s as the norm"],"a":3,"cite":"App G, para 105.9.c."},{"sec":"VI. Exercise Design and Execution","s":"What characterizes an intermediate-level exercise per Appendix G?","o":["A single UXP with one distractor","Classroom instruction only","Building on fundamental skills with added coordination, complexity, or task density","Stressing operational limits with the fewest resources"],"a":2,"cite":"App G, para 105.9.b. These are events where a CRTT is taking a basic event and building it into an advanced level exercise."},{"sec":"VI. Exercise Design and Execution","s":"In Evaluation Mode, how is the exercise conducted?","o":["With the CRTT assisting the trainee throughout","With scores withheld from NTIMS","With no prompting or training timeouts, with the final score determining event success or failure","With prompting permitted at evaluator discretion"],"a":2,"cite":"App G, para 105.6."},{"sec":"VI. Exercise Design and Execution","s":"In Evaluation Mode, when may evaluators intervene with a Training Time Out?","o":["Never","Whenever an error is observed","Only with CO approval","Only when watch team actions would cause an unsafe condition or impede the evaluation of others"],"a":3,"cite":"App G, para 105.6."},{"sec":"VI. Exercise Design and Execution","s":"When a CRTT operates in Instruction Mode, what is the rule regarding performance scores?","o":["Scores are submitted to NTIMS with an explanatory comment","Do not submit performance scores to NTIMS","Scores are submitted to DRRS-S but not NTIMS","Scores are submitted only if passing"],"a":1,"cite":"App G, para 105.7. Performance is still evaluated; it is simply not reported."},{"sec":"VI. Exercise Design and Execution","s":"To use real-world operations for self-assessment, operations must allow evaluation of at least what percentage of the marking factors contained in the UXPs?","o":["75%","80%","90%","100%"],"a":2,"cite":"App G, para 105.18.a."},{"sec":"VI. Exercise Design and Execution","s":"What document must be developed when real-world operations are used for evaluation?","o":["A naval message to NAVIFOR N7","A JIRA ticket in PCTE","A Memorandum for the Record stating a short synopsis of the situation, timeframe, watch team assessed, and CRTT roles used","A revised Master Exercise Package"],"a":2,"cite":"App G, para 105.18.e. Critiques and lessons learned must also be kept on file, and the CRTT conducts pre and post briefs."},{"sec":"VI. Exercise Design and Execution","s":"Per Appendix G, ULTRA events must be run based on what?","o":["Advanced-level events","Intermediate-level events","Basic-level events","Real-world operations"],"a":0,"cite":"App G, para 105.18.f."},{"sec":"VI. Exercise Design and Execution","s":"As a group, the CRTT must maintain a minimum of how many events that, when executed, evaluate all line items in each UXP?","o":["One basic event only","Two basic and two advanced events","Three advanced events","One basic and one advanced level event"],"a":3,"cite":"App G, para 103.9.d."},{"sec":"VI. Exercise Design and Execution","s":"Which exercise packages require the Commanding Officer's signature?","o":["Every iteration of every package","Initial exercise packages, and major changes or new exercises","Only packages involving equipment casualties","Only packages used during an ULTRA"],"a":1,"cite":"App G, para 105.16. Minor modifications do not require CO signature, and it is at the CO's discretion to determine what constitutes a minor modification."},{"sec":"VI. Exercise Design and Execution","s":"What does exercise integrity refer to?","o":["Steps taken to prevent data classification spillage","Ensuring the MSEL timeline is not altered","Verifying evaluator impartiality","Steps taken to prevent injects, props, and reports from being transmitted outside the lifelines of the exercise command"],"a":3,"cite":"App G, para 105.12.k."},{"sec":"VI. Exercise Design and Execution","s":"What does operational integrity refer to?","o":["Steps taken to prevent data classification spillage","Protecting the identity of trusted agents","Ensuring equipment casualties are restorable","Maintaining the exercise timeline"],"a":0,"cite":"App G, para 105.12.l."},{"sec":"VI. Exercise Design and Execution","s":"Per Appendix G, who serves as Safety Observers?","o":["All CRTT members, plus non-designated members as required","Training Device Operators","Only the CRTT Coordinator","Only personnel designated in writing as Safety Observers"],"a":0,"cite":"App G, para 103.5. Their role is to ensure safe conduct during an exercise and report issues to the CRTT Coordinator."},{"sec":"VI. Exercise Design and Execution","s":"What must Trusted Agents be familiar with?","o":["The NMETL and LRTP","PCTE account permissions","The MSEL and exercise objectives","The UCS and CST-01"],"a":2,"cite":"App G, para 103.7. They may play any role required for exercise realism."},{"sec":"VI. Exercise Design and Execution","s":"Where must all equipment casualties be captured, and who approves them?","o":["In the drill guide, approved by the CRTT Coordinator","In the UXP, approved by NAVIFOR","In the SRTP, approved by the PB4T","In the MSEL, approved by the CO"],"a":3,"cite":"App G, para 105.12."},{"sec":"VI. Exercise Design and Execution","s":"Per the DODIN exercise development guidance, how many unique exercises should a command have for each UXP?","o":["Four","Two","Three","One"],"a":2,"cite":"App G, DODIN Exercise Development. One should be at the basic level, and each UXP should be included in two of the command's advanced exercises."},{"sec":"VI. Exercise Design and Execution","s":"For a command's first ULTRA, what is required?","o":["Three or more advanced exercises","One basic and one advanced exercise","Three or more basic exercises","Two advanced exercises and one distractor"],"a":2,"cite":"App G, DODIN Exercise Development, para 3. Sustainment and ongoing ULTRAs require three or more advanced exercises."},{"sec":"VI. Exercise Design and Execution","s":"During an ULTRA, how many exercises does the Announcement Naval Message direct the command to prepare to execute, and how many does the SOE identify?","o":["Three directed; two identified","Two directed; three identified, the third as a standby","One directed; two identified","Three directed; three identified"],"a":1,"cite":"App G, DODIN Exercise Development, para 4."},{"sec":"VI. Exercise Design and Execution","s":"Which drill guide must every command have, inspectable during the ULTRA Admin Phase?","o":["Loss of Crypto","Loss of Network Services","Loss of Power","Loss of UHF SATCOM"],"a":2,"cite":"App G, DODIN Drill Guides, para 2."},{"sec":"VI. Exercise Design and Execution","s":"When a Navy Tactical Task is failed, within what period must the drill be rerun and scores entered in NTIMS?","o":["14 days","30 days","60 days","90 days"],"a":1,"cite":"App G, DODIN Failure of an NTA. The CRTT must also provide comments in NTIMS explaining the failure to support RTAAG trend analysis."},{"sec":"VII. Ranges and Simulation","s":"Which capability provides an enterprise level, remotely accessible platform for individual training and qualification, collective training, performance assessment, and certification?","o":["PCTE","NCTE","JIOR","NCR"],"a":0,"cite":"App F, para 101.1.d."},{"sec":"VII. Ranges and Simulation","s":"Which range is described as a closed-loop, scalable, and transportable network using encrypted tunneling over existing transport networks?","o":["PCTE","Joint Information Operations Range","National Cyber Range","Navy Continuous Training Environment"],"a":1,"cite":"App F, para 105.2.b. JIOR supports IO, EW, OCO, DCO, Spectrum Warfare, Space, and SOF mission areas."},{"sec":"VII. Ranges and Simulation","s":"What capability does JIOR provide with respect to cyber weapons?","o":["Live-fire testing against real adversary networks","Accreditation of cyber capabilities for operational use","Automated red team emulation","Training and certifying CMF on the full spectrum of cyber weapons and capabilities without risk of observation or fratricide"],"a":3,"cite":"App F, para 105.2.b."},{"sec":"VII. Ranges and Simulation","s":"The National Cyber Range is based on technologies developed under DARPA and is exercised by which organization?","o":["DoD Test Resource Management Center","NIWDC","NSA/CSS","Joint Cyber Training Enterprise"],"a":0,"cite":"App F, para 105.2.c."},{"sec":"VII. Ranges and Simulation","s":"FCC/NAVIFOR is the owner of the Navy's what, with respect to PCTE?","o":["Navy Continuous Training Environment","Military Training Organization","Joint Cyber Training Enterprise","Cryptologic Training System"],"a":1,"cite":"App F, para 105.2.b."},{"sec":"VII. Ranges and Simulation","s":"What happens to PCTE content that does not adhere to current labeling guidance?","o":["It is archived to the FCC content catalog","It may be subject to deletion","It is transferred to the local trusted agent","It is flagged for JCTE review"],"a":1,"cite":"App F, para 105.2.a. Good housekeeping processes are required to maximize finite resources."},{"sec":"VII. Ranges and Simulation","s":"PCTE team-level training event reservation requests are initiated under which option?","o":["PCTE Saturn JIRA Service Desk 2.0 / Events / PCTE Training Event","ENTRS","The JCTE Intelink portal","The NAVIFOR Intelshare SIPR site"],"a":0,"cite":"App F, para 105.2.h. Events without a valid reservation may experience scheduled outage or resource issues."},{"sec":"VII. Ranges and Simulation","s":"Which simulation type uses real operators and simulated systems, injecting a human-in-the-loop into a central role?","o":["Constructive simulation","Synthetic simulation","Live simulation","Virtual simulation"],"a":3,"cite":"App G, para 106.1.b. Live uses real operators and real systems; constructive uses simulated people operating computer-based simulated systems."},{"sec":"VII. Ranges and Simulation","s":"Which instruction directs that training achieve a balance between LVC training events to attain targeted levels of readiness across the FRTP?","o":["DoD Instruction 3305.09","DoD Instruction 1322.18","USCCI 1200-07","OPNAVINST 1500.76"],"a":1,"cite":"App G, para 106.1."},{"sec":"VIII. Readiness Reporting","s":"Per Appendix F, which system is used to record all cyber related UXP completion data?","o":["NRAS","NTIMS","DRRS-S","JCC2-R"],"a":1,"cite":"App F, para 106.2."},{"sec":"VIII. Readiness Reporting","s":"Which system is the USCC authoritative tool for tracking the readiness of Cyber Mission Force teams?","o":["JCC2-R","DRRS-S","SORTS","NTIMS"],"a":0,"cite":"Ch 6, para 605. It depicts service level force presentation readiness by team, aligned to battle rostered work roles."},{"sec":"VIII. Readiness Reporting","s":"Who is responsible for maintaining accurate battle rosters and ensuring JCC2-R reflects accurate readiness data?","o":["NAVIFOR RTAAG","FCC N9","The ADCON Commanding Officer","CMF Team Leads"],"a":3,"cite":"Ch 6, para 605, in accordance with Fleet Cyber Command policies."},{"sec":"VIII. Readiness Reporting","s":"What is the stated purpose of JCC2?","o":["To replace DRRS-S for all Navy readiness reporting","To manage PCTE range resources","To administer LOK examinations","To provide enhanced situational awareness and battle management for cyberspace operations missions and forces"],"a":3,"cite":"App F, para 106.1. JCC2 is a congressionally directed focal point providing integrated solutions to all echelons."},{"sec":"VIII. Readiness Reporting","s":"Which readiness system includes SORTS and provides the primary means for units to report readiness in a standard format?","o":["DRRS-S","NTIMS","ESORTS","NRAS"],"a":0,"cite":"App F, para 106.3; see also Ch 6, para 601."},{"sec":"VIII. Readiness Reporting","s":"The Training Pillar Figure of Merit is generated by which system and reported in which system?","o":["Generated by JCC2-R, reported in SORTS","Generated by DRRS, reported in NTIMS","Generated by NRAS, reported in DRRS","Generated by NTIMS, reported in NRAS"],"a":3,"cite":"Ch 5, para 505.3."},{"sec":"VIII. Readiness Reporting","s":"The UXP provides Data Collection Sheets that capture key readiness standards and assign measurements for achieving what minimum readiness threshold?","o":["T-1","T-2","T-3","T-4"],"a":1,"cite":"Ch 5, para 503.1.c. The UXP establishes periodicities of monthly, quarterly, semi-annually, or annually."},{"sec":"IX. Program Records and Admin","s":"Per the Appendix A administrative requirements table, over what period is the CRTT Replacement Plan projected?","o":["12 months","24 months","36 months","48 months"],"a":1,"cite":"App A, para 102, line 3."},{"sec":"IX. Program Records and Admin","s":"Per the Appendix A administrative requirements table, how current must the command SOP be?","o":["Within the past 12 months","Within the current NWTP cycle","Within the past 24 months","Within the past 6 months"],"a":0,"cite":"App A, para 102, line 4."},{"sec":"IX. Program Records and Admin","s":"Per the Appendix A administrative requirements table, grading sheets documenting events must be retained for what period?","o":["The life of the NWTP","12 months","36 months","24 months"],"a":3,"cite":"App A, para 102, line 8. After Action Reports are likewise retained for the previous 24 months per line 10."},{"sec":"IX. Program Records and Admin","s":"At what frequency are the Appendix A administrative line items self-assessed, and by what means are they assessed during an ULTRA?","o":["Monthly self-assess; assessed via CST-01","Annually self-assess; assessed via AAR","Semi-annually self-assess; assessed via NTIMS","Quarterly self-assess; assessed via the UCS"],"a":3,"cite":"App A, para 102, all twelve line items."},{"sec":"IX. Program Records and Admin","s":"Per Appendix G, the CRTT Coordinator must retain NWTP records for a minimum of how long?","o":["Two NWTP cycles, or 36 months","Five years","24 months","12 months"],"a":0,"cite":"App G, para 103.3.c, in accordance with the NAVIFOR UCS (Series) Checklist, Section 1 - Admin. Compare Ch 2, para 205.1.o, which directs the TRAINO to maintain training records and critiques for 24 months."},{"sec":"IX. Program Records and Admin","s":"Which of the following is a record the CRTT Coordinator must maintain at a minimum?","o":["The unit's battle roster and JCC2-R export","The Master Marking Factors sheet comprised of all scores","The PCTE account creation SOP","The command's FLTMPS critical school percentages"],"a":1,"cite":"App G, para 103.3.c(6). Other required items include the LRTP, Short Range Exercise Calendar, approved exercise packages and guides, and exercise critiques."},{"sec":"IX. Program Records and Admin","s":"Per the CST-01 check sheet, which section is designated CRITICAL, requiring a passing assessment to pass the assessment event?","o":["Section 4, Execution","Section 1, Program Management","Section 5, CRTT Debrief","Section 2, CRTT Pre-Briefing"],"a":1,"cite":"CST-01 (13 Jan 2022), CST01 Unit Copy tab, Section 1 header. Note: the CST-01 is a supporting document, not M-3502.1A itself."},{"sec":"IX. Program Records and Admin","s":"Per the CST-01, over what periods do the LRTP and SRTP project?","o":["LRTP 24 months; SRTP 3 months","LRTP 12 months; SRTP 1 month","LRTP 18 months; SRTP 3 months","LRTP 36 months; SRTP 6 months"],"a":0,"cite":"CST-01 (13 Jan 2022), Section 1, line 7, a CRITICAL line item. The SRTP will be signed by the local training officer or PB4T coordinator."},{"sec":"X. Terminology and Acronyms","s":"In the M-3502.1A acronym list, CMT stands for:","o":["Cyber Mission Team","Cyber Management Team","Collective Mission Task","Combat Mission Team"],"a":3,"cite":"App J."},{"sec":"X. Terminology and Acronyms","s":"In the M-3502.1A acronym list, CPT stands for:","o":["Cyberspace Protection Team","Combat Protection Team","Cyber Protection Team","Cyber Planning Team"],"a":2,"cite":"App J."},{"sec":"X. Terminology and Acronyms","s":"In the M-3502.1A acronym list, CST stands for:","o":["Combat Support Team","Collective Standards Table","Cyber Support Team","Cyber Standards Test"],"a":0,"cite":"App J. Do not confuse this with the CST-01 check sheet used during cyber ULTRA events."},{"sec":"X. Terminology and Acronyms","s":"UCS stands for:","o":["ULTRA Check Sheet","ULTRA Certification Standard","Unit Check Sheet","Unit Certification Standard"],"a":0,"cite":"App J."},{"sec":"X. Terminology and Acronyms","s":"ION stands for:","o":["Integrated Operations Network","Information Operations Node","Interactive ON-NET","Intelligence Operations Node"],"a":2,"cite":"App J. The ION Operator is one of the CNO high-risk work roles supported by ORC courses."},{"sec":"X. Terminology and Acronyms","s":"DCWF stands for:","o":["Defensive Cyber Warfare Framework","DoD Cyber Operations Workforce Framework","Defense Cyber Workforce Function","Digital Cyber Warfighting Function"],"a":1,"cite":"App J."},{"sec":"X. Terminology and Acronyms","s":"CSSP stands for:","o":["Cyberspace Support Services Plan","Cybersecurity Service Provider","Cyberspace Security Provider","Cyber Systems Support Program"],"a":2,"cite":"App J, as printed in the M-3502.1A acronym list."},{"sec":"X. Terminology and Acronyms","s":"CWT stands for:","o":["Cyber Warfare Technician","Cyberspace Warfighting Team","Cyber Warfare Team","Collective Warfare Task"],"a":0,"cite":"App J. CWT is one of the ratings whose A school satisfies 1000-level CMF training."},{"sec":"X. Terminology and Acronyms","s":"RTAAG stands for:","o":["Regional Training Assessment and Assist Group","Readiness Team Assist and Advisory Group","Readiness Training Assessment and Assist Group","Readiness Training and Assessment Advisory Group"],"a":2,"cite":"App J. Do not confuse with CTAG, the Cryptologic Training Advisory Group, which addresses cryptologic training issues under the Cryptologic Training Council."},{"sec":"X. Terminology and Acronyms","s":"CTAG stands for:","o":["Cyber Technical Advisory Group","Combined Training Assist Group","Cyber Training Assessment Group","Cryptologic Training Advisory Group"],"a":3,"cite":"App J; see also Ch 3, para 308.3. CTAGs represent the CNO, A&R, ELINT, Signals Analysis, and Language Analysis disciplines."},{"sec":"X. Terminology and Acronyms","s":"IFORTRAMAN is the short title for which document?","o":["The Information Forces Training Requirements Manual","The Information Forces Tactical Reference Manual","The Information Warfare Force Training Management Manual","The Naval Information Forces Training and Readiness Manual"],"a":3,"cite":"App J. Appendix G directs that CRTT command instructions and SOPs be executed in accordance with the IFORTRAMAN."}];
+const LTR = ["A","B","C","D"];
+const SECTIONS = [];
+BANK.forEach(q=>{ if(!SECTIONS.includes(q.sec)) SECTIONS.push(q.sec); });
 
-function selectedFor(n) {
-  var checked = document.querySelectorAll('input[name="q' + n + '"]:checked');
-  var result = [];
-  for (var i = 0; i < checked.length; i++) result.push(Number(checked[i].value));
-  result.sort(function(a,b){return a-b;});
-  return result;
+let Q = [];          // active item set
+let ans = [];
+let cur = 0;
+let graded = false;
+let started = false;
+let scopeLabel = "";
+
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const answeredCount = () => ans.filter(v=>v!==null).length;
+const roman = s => s.split(".")[0];
+const shortName = s => s.split(". ").slice(1).join(". ");
+
+function startSet(items,label){
+  Q = items; ans = new Array(items.length).fill(null);
+  cur = 0; graded = false; started = true; scopeLabel = label; render();
 }
 
-function sameArray(a,b) {
-  if (a.length !== b.length) return false;
-  for (var i=0;i<a.length;i++) if (a[i] !== b[i]) return false;
-  return true;
+function startHTML(){
+  const rows = SECTIONS.map(s=>{
+    const n = BANK.filter(q=>q.sec===s).length;
+    return `<button class="mode" data-sec="${esc(s)}">
+      <span class="rn">${esc(roman(s))}</span>
+      <span class="nm">${esc(shortName(s))}</span>
+      <span class="ct">${n} items</span></button>`;
+  }).join("");
+  return `<div class="start">
+    <h2>Select scope</h2>
+    <p class="lede">The full examination runs 150 items across ten sections. Section practice runs one section at a time with the same grading and citations - useful for drilling a weak area without sitting the whole bank.</p>
+    <button class="mode full" data-sec="__ALL__">
+      <span class="rn">&#9632;</span>
+      <span class="nm">Begin full examination</span>
+      <span class="ct">150 items</span></button>
+    <div class="modes">${rows}</div>
+  </div>`;
 }
 
-function gradeQuiz() {
-  var correct = 0;
-  var answered = 0;
-  missed = [];
-  for (var k=0;k<QUESTION_NUMBERS.length;k++) {
-    var n = QUESTION_NUMBERS[k];
-    var selected = selectedFor(n);
-    var key = ANSWERS[String(n)].slice().sort(function(a,b){return a-b;});
-    if (selected.length) answered++;
-    var ok = sameArray(selected,key);
-    if (ok) correct++; else missed.push(n);
+function railHTML(){
+  let out = "", idx = 0;
+  SECTIONS.forEach(s=>{
+    const ids = [];
+    Q.forEach((q,i)=>{ if(q.sec===s) ids.push(i); });
+    if(!ids.length) return;
+    const cells = ids.map(i=>{
+      let cls = "cell";
+      if(graded){ cls += ans[i]===Q[i].a ? " sat" : " unsat"; }
+      else { if(ans[i]!==null) cls += " answered"; if(i===cur) cls += " current"; }
+      return `<button class="${cls}" data-jump="${i}" aria-label="Item ${i+1}">${i+1}</button>`;
+    }).join("");
+    out += `<div class="rgrp"><div class="rgrp-l">${esc(roman(s))} &middot; ${esc(shortName(s))}</div><div class="cells">${cells}</div></div>`;
+    idx += ids.length;
+  });
+  return `<aside class="rail"><div class="rail-hd">Marking factors</div>${out}
+    <div class="rail-ct">${graded ? "Graded" : answeredCount()+" / "+Q.length+" marked"}</div></aside>`;
+}
 
-    var labels = document.querySelectorAll('#card-' + n + ' .option');
-    for (var j=0;j<labels.length;j++) {
-      var idx = Number(labels[j].getAttribute('data-i'));
-      labels[j].classList.remove('correct','wrong');
-      if (key.indexOf(idx) !== -1) labels[j].classList.add('correct');
-      if (selected.indexOf(idx) !== -1 && key.indexOf(idx) === -1) labels[j].classList.add('wrong');
+function examHTML(){
+  const q = Q[cur];
+  const secItems = Q.filter(x=>x.sec===q.sec);
+  const posInSec = secItems.indexOf(q)+1;
+  const opts = q.o.map((t,i)=>
+    `<button class="opt${ans[cur]===i?" sel":""}" data-opt="${i}">
+       <span class="ltr">${LTR[i]}</span><span>${esc(t)}</span></button>`).join("");
+  return `<div class="grid">${railHTML()}
+    <main>
+      <div class="card">
+        <div class="eyebrow">
+          <span class="qnum">Item ${String(cur+1).padStart(3,"0")} of ${Q.length}</span>
+          <span>${esc(roman(q.sec))} &middot; ${esc(shortName(q.sec))} &middot; ${posInSec}/${secItems.length}</span>
+        </div>
+        <p class="stem">${esc(q.s)}</p>
+        <div class="opts">${opts}</div>
+      </div>
+      <div class="nav">
+        <button class="btn" id="prev" ${cur===0?"disabled":""}>&larr; Back</button>
+        <button class="btn" id="next" ${cur===Q.length-1?"disabled":""}>Next &rarr;</button>
+        <span class="spacer"></span>
+        <button class="btn" id="quit">Change scope</button>
+        <button class="btn solid" id="submit">Submit</button>
+      </div>
+      <div class="warn" id="warn"></div>
+    </main></div>`;
+}
+
+function resultsHTML(){
+  const correct = Q.reduce((n,q,i)=> n + (ans[i]===q.a?1:0), 0);
+  const pct = Math.round(correct/Q.length*1000)/10;
+  const pass = pct >= 80;
+
+  const rows = SECTIONS.map(s=>{
+    const ids = []; Q.forEach((q,i)=>{ if(q.sec===s) ids.push(i); });
+    if(!ids.length) return "";
+    const c = ids.filter(i=>ans[i]===Q[i].a).length;
+    const p = Math.round(c/ids.length*100);
+    return `<tr><td class="nm">${esc(roman(s))} &middot; ${esc(shortName(s))}</td>
+      <td style="width:38%"><span class="bar"><i class="${p<80?"low":""}" style="width:${p}%"></i></span></td>
+      <td class="sc">${c}/${ids.length}</td></tr>`;
+  }).join("");
+
+  let items = "", lastSec = null;
+  Q.forEach((q,i)=>{
+    if(q.sec!==lastSec){ items += `<div class="sec-hd">${esc(q.sec)}</div>`; lastSec = q.sec; }
+    const ok = ans[i]===q.a;
+    const yours = ans[i]===null ? "No answer marked" : LTR[ans[i]]+". "+q.o[ans[i]];
+    items += `<div class="item" id="item-${i}">
+      <div class="item-top">
+        <span class="badge ${ok?"sat":"unsat"}">${ok?"Sat":"Unsat"}</span>
+        <span class="item-no">Item ${String(i+1).padStart(3,"0")}</span>
+      </div>
+      <div class="item-stem">${esc(q.s)}</div>
+      ${ok?"":`<div class="ans wrong"><span class="lbl">You marked</span><span class="txt">${esc(yours)}</span></div>`}
+      <div class="ans correct"><span class="lbl">Correct</span><span class="txt">${LTR[q.a]}. ${esc(q.o[q.a])}</span></div>
+      <div class="cite"><b>Source</b>${esc(q.cite)}</div></div>`;
+  });
+
+  return `<div class="grid">${railHTML()}
+    <main>
+      <div class="score-banner">
+        <div class="score-top">
+          <div class="score-big"><div class="pct">${pct}%</div>
+            <div class="raw">${correct} of ${Q.length} correct</div></div>
+          <div class="verdict">
+            <div class="tag ${pass?"pass":"fail"}">${pass?"Meets standard":"Below standard"}</div>
+            <div class="sub">${pass
+              ? "At or above the 80% LOK average required during an ULTRA (App G, para 107.1.b)."
+              : "Below the 80% LOK average required during an ULTRA. On-site remediation and a retest would be directed prior to RTAAG departure (App G, para 107.1.b)."}
+              ${scopeLabel?"<br>Scope: "+esc(scopeLabel):""}</div>
+          </div>
+        </div>
+        <table class="sectbl">${rows}</table>
+      </div>
+      <div class="nav">
+        <button class="btn" id="retake">Retake this set</button>
+        <button class="btn" id="jumpmiss">Jump to first missed</button>
+        <button class="btn" id="quit">Change scope</button>
+      </div>
+      <div class="rev-hd">Item review with source citations</div>
+      ${items}
+      <div class="note">
+        <h3>Source-level conflicts inside this material</h3>
+        <p><b>ULTRA periodicity.</b> App F, para 103 states CRTT/CQTT certify via ULTRA <em>biennially</em>. Ch 1, para 107.2 states <em>every 3 years</em> with 18-month sustainment checks. App G, para 107.d states a sustainment event or ULTRA <em>every 36 months</em> after initial certification. Items are anchored to a named paragraph for that reason.</p>
+        <p><b>Check sheet of record.</b> App F, para 103 directs the <em>CST-01</em>. App G, para 107.d(2) directs grading using the <em>UCS</em>. Both appear in the signed 2024 manual.</p>
+        <p><b>Records retention.</b> App G, para 103.3.c requires <em>36 months</em> of NWTP records. Ch 2, para 205.1.o and the App A admin table require <em>24 months</em> of training records, grading sheets, and AARs.</p>
+        <p><b>Who administers the LOK.</b> App G, para 107.1.b assigns LOK administration to the <em>RTAAG</em>. The CST-01 (2022) assigns it to the <em>NAVIFOR CTAG</em>.</p>
+        <p>None of these should be resolved by inference at the command level. Each is a candidate for NAVIFOR/RTAAG adjudication.</p>
+      </div>
+    </main></div>`;
+}
+
+function render(){
+  app.innerHTML = !started ? startHTML() : (graded ? resultsHTML() : examHTML());
+  bind();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function bind(){
+  app.querySelectorAll("[data-sec]").forEach(b=>{
+    b.onclick = ()=>{
+      const s = b.dataset.sec;
+      if(s==="__ALL__") startSet(BANK.slice(), "Full examination, 150 items");
+      else startSet(BANK.filter(q=>q.sec===s), s);
+    };
+  });
+  app.querySelectorAll("[data-jump]").forEach(b=>{
+    b.onclick = ()=>{
+      const i = +b.dataset.jump;
+      if(graded) document.getElementById("item-"+i).scrollIntoView({block:"start"});
+      else { cur = i; render(); }
+    };
+  });
+  app.querySelectorAll("[data-opt]").forEach(b=>{
+    b.onclick = ()=>{ ans[cur] = +b.dataset.opt; if(cur < Q.length-1) cur++; render(); };
+  });
+  const g = id => document.getElementById(id);
+  if(g("prev")) g("prev").onclick = ()=>{ cur=Math.max(0,cur-1); render(); };
+  if(g("next")) g("next").onclick = ()=>{ cur=Math.min(Q.length-1,cur+1); render(); };
+  if(g("retake")) g("retake").onclick = ()=>{ ans=new Array(Q.length).fill(null); cur=0; graded=false; render(); };
+  if(g("quit")) g("quit").onclick = ()=>{ started=false; graded=false; render(); };
+  if(g("jumpmiss")) g("jumpmiss").onclick = (e)=>{
+    const m = Q.map((q,i)=> ans[i]===q.a ? -1 : i).filter(v=>v>=0);
+    if(!m.length){ e.target.textContent = "Nothing missed"; return; }
+    document.getElementById("item-"+m[0]).scrollIntoView({block:"start"});
+  };
+  const sub = g("submit");
+  if(sub) sub.onclick = ()=>{
+    const left = Q.length - answeredCount();
+    if(left>0 && !sub.dataset.armed){
+      sub.dataset.armed = "1"; sub.textContent = "Submit anyway";
+      g("warn").textContent = left+" item"+(left===1?"":"s")+" unmarked. Unmarked items score as incorrect. Press again to submit.";
+      return;
     }
-    var fb = document.getElementById('fb-' + n);
-    fb.className = 'feedback ' + (ok ? 'good' : 'bad');
-    if (ok) {
-      fb.textContent = 'Correct';
-    } else {
-      var letters = [];
-      for (var z=0;z<key.length;z++) letters.push(String.fromCharCode(65 + key[z]));
-      fb.textContent = 'Incorrect. Correct answer' + (key.length > 1 ? 's' : '') + ': ' + letters.join(', ');
-    }
-  }
-  var pct = Math.round((correct / QUESTION_NUMBERS.length) * 100);
-  document.getElementById('score').textContent = correct + '/' + QUESTION_NUMBERS.length + ' (' + pct + '%) • ' + answered + ' answered';
-  window.scrollTo(0,0);
+    graded = true; render();
+  };
 }
 
-function resetQuiz() {
-  var inputs = document.querySelectorAll('input');
-  for (var i=0;i<inputs.length;i++) inputs[i].checked=false;
-  var opts = document.querySelectorAll('.option');
-  for (var j=0;j<opts.length;j++) opts[j].classList.remove('correct','wrong');
-  var fbs = document.querySelectorAll('.feedback');
-  for (var k=0;k<fbs.length;k++) { fbs[k].className='feedback'; fbs[k].textContent=''; }
-  var cards = document.querySelectorAll('.card');
-  for (var c=0;c<cards.length;c++) cards[c].style.display='';
-  document.getElementById('score').textContent='Not graded';
-  missed=[];
-  window.scrollTo(0,0);
-}
+document.addEventListener("keydown",e=>{
+  if(!started || graded) return;
+  if(e.key==="ArrowRight" && cur<Q.length-1){ cur++; render(); }
+  if(e.key==="ArrowLeft" && cur>0){ cur--; render(); }
+  const n = ["1","2","3","4"].indexOf(e.key);
+  if(n>-1 && n<Q[cur].o.length){ ans[cur]=n; if(cur<Q.length-1) cur++; render(); }
+});
 
-function retryMissed() {
-  if (!missed.length) {
-    alert('Submit and grade the quiz first.');
-    return;
-  }
-  var cards = document.querySelectorAll('.card');
-  for (var i=0;i<cards.length;i++) {
-    var n = Number(cards[i].id.replace('card-',''));
-    cards[i].style.display = missed.indexOf(n) !== -1 ? '' : 'none';
-  }
-  document.getElementById('score').textContent = missed.length + ' missed questions shown';
-  window.scrollTo(0,0);
-}
-
-function initializeQuizControls() {
-  var gradeButton = document.getElementById('gradeButton');
-  var resetButton = document.getElementById('resetButton');
-  var retryButton = document.getElementById('retryButton');
-
-  if (gradeButton) gradeButton.addEventListener('click', gradeQuiz);
-  if (resetButton) resetButton.addEventListener('click', resetQuiz);
-  if (retryButton) retryButton.addEventListener('click', retryMissed);
-
-  var notice = document.querySelector('.notice');
-  if (notice) {
-    notice.innerHTML = '<strong>Quiz controls loaded.</strong> Select answers, then tap Submit &amp; Grade. If this message does not appear, the file is open in a preview that blocks JavaScript; open the downloaded file in Chrome, Edge, Firefox, or Safari on a computer.';
-  }
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeQuizControls);
-} else {
-  initializeQuizControls();
-}
-
+render();
 </script>
 </body>
 </html>
