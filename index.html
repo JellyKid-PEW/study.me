@@ -77,6 +77,8 @@ button.btn.solid:hover{background:var(--ink-2);border-color:var(--ink-2)}
 .mode.full{border-top:0;background:var(--ink);color:var(--paper);padding:18px;margin-bottom:14px;border-bottom:0}
 .mode.full:hover{background:var(--ink-2);padding-left:18px}
 .mode.full .rn,.mode.full .ct{color:var(--mark-bg)}
+.mode.quick{border:2px solid var(--ink);background:var(--card-2);padding:16px 18px;margin-bottom:14px}
+.mode.quick:hover{background:var(--mark-bg);padding-left:18px}
 
 /* results */
 .score-banner{border:2px solid var(--ink);margin-bottom:26px;background:var(--card)}
@@ -173,6 +175,26 @@ const answeredCount = () => ans.filter(v=>v!==null).length;
 const roman = s => s.split(".")[0];
 const shortName = s => s.split(". ").slice(1).join(". ");
 
+const QUICK_N = 30;
+const shuffle = arr => {
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+};
+// Options that point at other options ("Both A and B", "All of the above") stay in place.
+const positional = q => q.o.some(o=>/\b(all|none) of the (above|below)\b|\b[A-D] (and|or) [A-D]\b/i.test(o));
+function shuffleChoices(q){
+  if(positional(q)) return q;
+  const order = shuffle(q.o.map((_,i)=>i));
+  return {...q, o: order.map(i=>q.o[i]), a: order.indexOf(q.a)};
+}
+// Random 30 from the bank with shuffled choices, grouped by section for the rail and review.
+function buildQuick(){
+  const picked = shuffle(BANK).slice(0, Math.min(QUICK_N, BANK.length)).map(shuffleChoices);
+  return SECTIONS.flatMap(s=>picked.filter(q=>q.sec===s));
+}
+let isQuick = false;
+
 function startSet(items,label){
   Q = items; ans = new Array(items.length).fill(null);
   cur = 0; graded = false; started = true; scopeLabel = label; render();
@@ -188,7 +210,11 @@ function startHTML(){
   }).join("");
   return `<div class="start">
     <h2>Select scope</h2>
-    <p class="lede">The full examination runs 150 items across ten sections. Section practice runs one section at a time with the same grading and citations - useful for drilling a weak area without sitting the whole bank.</p>
+    <p class="lede">The quick test pulls ${Math.min(QUICK_N,BANK.length)} random items from the bank with the answer choices shuffled - a different test every time. The full examination runs 150 items across ten sections. Section practice runs one section at a time with the same grading and citations - useful for drilling a weak area without sitting the whole bank.</p>
+    <button class="mode quick" data-sec="__QUICK__">
+      <span class="rn">&#9889;</span>
+      <span class="nm">Quick test &middot; ${Math.min(QUICK_N,BANK.length)} random items</span>
+      <span class="ct">new set each time</span></button>
     <button class="mode full" data-sec="__ALL__">
       <span class="rn">&#9632;</span>
       <span class="nm">Begin full examination</span>
@@ -292,6 +318,7 @@ function resultsHTML(){
         <table class="sectbl">${rows}</table>
       </div>
       <div class="nav">
+        ${isQuick?`<button class="btn solid" id="newquick">New quick test</button>`:""}
         <button class="btn" id="retake">Retake this set</button>
         <button class="btn" id="jumpmiss">Jump to first missed</button>
         <button class="btn" id="quit">Change scope</button>
@@ -319,7 +346,9 @@ function bind(){
   app.querySelectorAll("[data-sec]").forEach(b=>{
     b.onclick = ()=>{
       const s = b.dataset.sec;
-      if(s==="__ALL__") startSet(BANK.slice(), "Full examination, 150 items");
+      isQuick = s==="__QUICK__";
+      if(isQuick) startSet(buildQuick(), "Quick test, "+Math.min(QUICK_N,BANK.length)+" random items");
+      else if(s==="__ALL__") startSet(BANK.slice(), "Full examination, 150 items");
       else startSet(BANK.filter(q=>q.sec===s), s);
     };
   });
@@ -337,6 +366,7 @@ function bind(){
   if(g("prev")) g("prev").onclick = ()=>{ cur=Math.max(0,cur-1); render(); };
   if(g("next")) g("next").onclick = ()=>{ cur=Math.min(Q.length-1,cur+1); render(); };
   if(g("retake")) g("retake").onclick = ()=>{ ans=new Array(Q.length).fill(null); cur=0; graded=false; render(); };
+  if(g("newquick")) g("newquick").onclick = ()=> startSet(buildQuick(), scopeLabel);
   if(g("quit")) g("quit").onclick = ()=>{ started=false; graded=false; render(); };
   if(g("jumpmiss")) g("jumpmiss").onclick = (e)=>{
     const m = Q.map((q,i)=> ans[i]===q.a ? -1 : i).filter(v=>v>=0);
